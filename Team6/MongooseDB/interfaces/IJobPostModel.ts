@@ -1,6 +1,7 @@
 import Mongoose = require("mongoose");
 
 interface IJobPostModel extends Mongoose.Document {
+    jobPostId: string;
     position_title: string;
     location: string;
     date_posted: Date;

@@ -1,5 +1,5 @@
 import * as Mongoose from "mongoose";
-import {ITaskModel} from '../interfaces/IAppliedJobModel';
+import {IAppliedJobModel} from '../interfaces/IAppliedJobModel';
 
 class TaskModel {
     public schema:any;
@@ -16,52 +16,56 @@ class TaskModel {
     public createSchema(): void {
         this.schema = new Mongoose.Schema(
             {
-                listId: String,
-                tasks: [
-                    {
-                        description: String,
-                        taskId: Number,
-                        shared: String,
-                        status: String
-                    }        
-                ]
-            }, {collection: 'tasks'}
+                appliedJobId: String,
+                user_id: String,
+                job_id: String,
+                applied_date: Date,
+                status: String
+            }, {collection: 'appliedjobs'}
         );
     }
 
     public async createModel() {
         try {
             await Mongoose.connect(this.dbConnectionString, {useNewUrlParser: true, useUnifiedTopology: true});
-            this.model = Mongoose.model<ITaskModel>("Task", this.schema);    
+            this.model = Mongoose.model<IAppliedJobModel>("Task", this.schema);    
         }
         catch (e) {
             console.error(e);        
         }
     }
     
-    public async retrieveTasksDetails(response:any, filter:Object) {
-        var query = this.model.findOne(filter);
+    public async retrieveAllAppliedJobs(response:any) {
+        console.log('Retrieving all applied jobs');
+        const query = this.model.find({});
         try {
-            const itemArray = await query.exec();
-            response.json(itemArray);
+            const appliedJobArray = await query.exec();
+            response.json(appliedJobArray);
         }
         catch (e) {
             console.error(e);
         }
     }
 
-    public async retrieveTasksCount(response:any, filter:Object) {
-        var query = this.model.findOne(filter);
+    public async retrieveAppliedJobById(response:any, appliedJobId:string) {
+        console.log('Retrieving applied job with id: ' + appliedJobId);
+        const query = this.model.findOne({appliedId: appliedJobId});
         try {
-            const innerTaskList = await query.exec();
-            if (innerTaskList == null) {
-                response.status(404);
-                response.json('{count: -1}');
-            }
-            else {
-                console.log('number of tasks: ' + innerTaskList.tasks.length);
-                response.json('{count:' + innerTaskList.tasks.length + '}');
-            }
+            const appliedJob = await query.exec();
+            response.json(appliedJob);
+        }
+        catch (e) {
+            console.error(e);
+        }
+    }
+
+    public async createAppliedJob(response:any, appliedJob:any) {
+        console.log('Creating applied job: ' + JSON.stringify(appliedJob));
+        const newAppliedJob = new this.model(appliedJob);
+        const query = newAppliedJob.save();
+        try {
+            const result = await query.exec();
+            response.json(result);
         }
         catch (e) {
             console.error(e);
