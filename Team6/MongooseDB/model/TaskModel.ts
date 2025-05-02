@@ -1,5 +1,5 @@
 import * as Mongoose from "mongoose";
-import {ITaskModel} from '../interfaces/ITaskModel';
+import {ITaskModel} from '../interfaces/IAppliedJobModel';
 
 class TaskModel {
     public schema:any;

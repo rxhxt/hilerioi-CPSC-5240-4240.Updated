@@ -1,5 +1,5 @@
 import * as Mongoose from "mongoose";
-import {IListModel} from '../interfaces/IListModel';
+import {IListModel} from '../interfaces/IJobPostModel';
 
 class ListModel {
     public schema:any;
