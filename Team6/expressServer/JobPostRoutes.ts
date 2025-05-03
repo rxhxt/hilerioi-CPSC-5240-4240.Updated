@@ -24,12 +24,13 @@ class JobPostRoutes {
             await this.jobPostModel.retrieveJobPostsById(res, jobPostId);
         });
 
-
+        // Create new job post
+        this.router.post('/api/v1/jobposts', async (req, res) => {
+            const jobPostData = req.body;
+            await this.jobPostModel.CreateJobPost(res, jobPostData);
+        });
     }
 
-
-
-
-
+    
 
 }
