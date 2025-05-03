@@ -72,10 +72,29 @@ class JobPostRouter {
             }
         });
 
+        // POST new job post
+        this.router.post('/', async(req, res, next) => {
+            try {
+                const jobPostData = req.body;
 
+                // Create new job post using Mongoose
+                const newJobPost = await JobPost.create(jobPostData);
 
+                res.status(201).json({
+                    status:'success',
+                    data: newJobPost,
+                    message: 'Created new job post'
+                });
+            } catch (error) {
+                console.log(error);
 
-
+                res.status(500).json({
+                    status: 'error',
+                    message: 'Failed to create job post',
+                    error: error.message
+                });
+            }
+        });
 
     }
 
