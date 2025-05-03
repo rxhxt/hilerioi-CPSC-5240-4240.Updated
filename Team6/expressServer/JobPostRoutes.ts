@@ -17,9 +17,17 @@ class JobPostRoutes {
         this.router.get('/api/v1/jobposts', async (req, res) => {
             await this.jobPostModel.retrieveAllJobPosts(res);
         });
+
+        // Get job post by id
+        this.router.get('/api/v1/jobposts/:jobPostId', async (req, res) => {
+            const jobPostId = req.params.jobPostId;
+            await this.jobPostModel.retrieveJobPostsById(res, jobPostId);
+        });
+
+
     }
 
-    
+
 
 
 
