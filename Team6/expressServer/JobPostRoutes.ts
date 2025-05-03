@@ -37,3 +37,5 @@ class JobPostRoutes {
 
 
 }
+
+export {JobPostRoutes}
