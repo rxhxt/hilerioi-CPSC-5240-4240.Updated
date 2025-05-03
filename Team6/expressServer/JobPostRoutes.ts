@@ -34,6 +34,6 @@ router.get('/', async (req, res) => {
         const jobPosts = await retrieveAllJobPosts();
         res.json(jobPosts);
     } catch (error) {
-        res.status(500).json({error: 'Failed to job posts'});
+        res.status(500).json({error: 'Failed to fetch job posts'});
     }
 });
