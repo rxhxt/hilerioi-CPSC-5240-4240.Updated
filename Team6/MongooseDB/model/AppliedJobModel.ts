@@ -1,7 +1,7 @@
 import * as Mongoose from "mongoose";
 import {IAppliedJobModel} from '../interfaces/IAppliedJobModel';
 
-class TaskModel {
+class AppliedJobModel {
     public schema:any;
     public innerSchema:any;
     public model:any;
@@ -72,4 +72,4 @@ class TaskModel {
         }
     }
 }
-export {TaskModel};
+export {AppliedJobModel};

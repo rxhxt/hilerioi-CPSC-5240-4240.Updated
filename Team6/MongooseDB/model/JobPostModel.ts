@@ -1,7 +1,7 @@
 import * as Mongoose from "mongoose";
 import {IJobPostModel} from '../interfaces/IJobPostModel';
 
-class ListModel {
+class JobPostModel {
     public schema:any;
     public model:any;
     public dbConnectionString:string;
@@ -81,4 +81,4 @@ class ListModel {
     }
         
 }
-export {ListModel};
+export {JobPostModel};
