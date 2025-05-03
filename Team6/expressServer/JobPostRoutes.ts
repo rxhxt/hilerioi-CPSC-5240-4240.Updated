@@ -42,7 +42,35 @@ class JobPostRouter {
             }
         });
 
-        
+        // GET job post by ID
+        this.router.get('/:id', async (req, res, next) => {
+            try {
+                const id = req.params.id;
+
+                // Find a job post with the specified ID using mongoose
+                const jobPost = await JobPost.findById(id);
+
+                if (!jobPost) {
+                    return res.status(404).json({
+                        status: 'error',
+                        message: `Job post with ID ${id} not found`
+                    });
+                }
+
+                res.status(200).json({
+                    status: 'success',
+                    data: jobPost,
+                    message: `Retrived job post with ID ${id}`
+                });
+            } catch (error) {
+                console.log(error);
+                res.status(500).json({
+                    status: 'error',
+                    message: 'Failed to retrieve job post',
+                    error: error.message
+                });
+            }
+        });
 
 
 
