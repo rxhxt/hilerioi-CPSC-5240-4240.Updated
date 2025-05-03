@@ -1,8 +1,8 @@
 import * as express from 'express';
 import {
     createJobPost,
-    getAllJobPost,
-    getJobPostById    
+    retrieveAllJobPosts,
+    retrieveJobPostsById    
 } from '../MongooseDB/model/JobPostModel';  
 
 const router = express.Router();
@@ -18,7 +18,7 @@ router.post('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-        const jobPost = await getJobPostById(req.params.id);
+        const jobPost = await retrieveJobPostsById(req.params.id);
         if (!jobPost) {
             return res.status(404).json({error: 'Job post not found'});
         }
@@ -29,3 +29,11 @@ router.get('/:id', async (req, res) => {
 });
 
 
+router.get('/', async (req, res) => {
+    try {
+        const jobPosts = await retrieveAllJobPosts();
+        res.json(jobPosts);
+    } catch (error) {
+        res.status(500).json({error: 'Failed to job posts'});
+    }
+});
