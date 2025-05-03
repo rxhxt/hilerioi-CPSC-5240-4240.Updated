@@ -31,6 +31,9 @@ class JobPostRoutes {
         });
     }
 
-    
+    public getRouter() : express.Router {
+        return this.router;
+    }
+
 
 }
