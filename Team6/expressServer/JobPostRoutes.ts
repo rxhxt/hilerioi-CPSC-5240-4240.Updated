@@ -12,7 +12,15 @@ class JobPostRoutes {
         this.configureRoutes();
     }
 
+    private configureRoutes(): void {
+        // Get all job posts
+        this.router.get('/api/v1/jobposts', async (req, res) => {
+            await this.jobPostModel.retrieveAllJobPosts(res);
+        });
+    }
+
     
+
 
 
 
