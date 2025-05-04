@@ -20,7 +20,7 @@
     "lib": ["ES2015", "es2018", "dom"],
     "target": "es6",
     "moduleResolution" : "node",
-    "rootDir": "./",
+    // "rootDir": "./",
     "sourceMap": true,
     "types":["node"],
     "typeRoots": [
