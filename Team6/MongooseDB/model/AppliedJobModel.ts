@@ -27,7 +27,7 @@ class AppliedJobModel {
 
     public async createModel() {
         try {
-            await Mongoose.connect(this.dbConnectionString, {useNewUrlParser: true, useUnifiedTopology: true});
+            await Mongoose.connect(this.dbConnectionString);
             this.model = Mongoose.model<IAppliedJobModel>("Task", this.schema);    
         }
         catch (e) {
