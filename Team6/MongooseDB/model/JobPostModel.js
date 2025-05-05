@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ListModel = void 0;
+exports.JobPostModel = void 0;
 const Mongoose = require("mongoose");
-class ListModel {
+class JobPostModel {
     constructor(DB_CONNECTION_STRING) {
         this.dbConnectionString = DB_CONNECTION_STRING;
         this.createSchema();
@@ -19,42 +19,49 @@ class ListModel {
     }
     createSchema() {
         this.schema = new Mongoose.Schema({
-            name: String,
-            description: String,
-            listId: String,
-            due: String,
-            state: String,
-            owner: String
-        }, { collection: 'lists' });
+            jobPostId: String,
+            position_title: String,
+            location: String,
+            date_posted: Date,
+            company: String,
+            recruiter: String,
+            job_description: String,
+            salary: Number,
+            status: String,
+            scrape_date: Date,
+            url: String,
+            job_work_type: String,
+            is_remote: Boolean
+        }, { collection: 'jobposts' });
     }
     createModel() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield Mongoose.connect(this.dbConnectionString, { useNewUrlParser: true, useUnifiedTopology: true });
-                this.model = Mongoose.model("Lists", this.schema);
+                yield Mongoose.connect(this.dbConnectionString);
+                this.model = Mongoose.model("JobPost", this.schema);
             }
             catch (e) {
                 console.error(e);
             }
         });
     }
-    retrieveAllLists(response) {
+    retrieveAllJobPosts(response) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log('Retrieving all job posts');
             var query = this.model.find({});
-            // query.where("state");
-            // query.lt("B");
             try {
-                const itemArray = yield query.exec();
-                response.json(itemArray);
+                const jobPostArray = yield query.exec();
+                response.json(jobPostArray);
             }
             catch (e) {
                 console.error(e);
             }
         });
     }
-    retrieveLists(response, value) {
+    retrieveJobPostsById(response, job_id) {
         return __awaiter(this, void 0, void 0, function* () {
-            var query = this.model.findOne({ listId: value });
+            console.log('Retrieving job post with id: ' + job_id);
+            var query = this.model.findOne({ jobPostId: job_id });
             try {
                 const result = yield query.exec();
                 response.json(result);
@@ -64,20 +71,21 @@ class ListModel {
             }
         });
     }
-    retrieveListCount(response) {
+    CreateJobPost(response, data) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("retrieve List Count ...");
-            var query = this.model.estimatedDocumentCount();
+            console.log('Creating job post with data: ' + JSON.stringify(data));
             try {
-                const numberOfLists = yield query.exec();
-                console.log("numberOfLists: " + numberOfLists);
-                response.json(numberOfLists);
+                const newJobPost = new this.model(data);
+                // Save directly returns a Promise, so just await it
+                const result = yield newJobPost.save();
+                response.json(result);
             }
             catch (e) {
                 console.error(e);
+                response.status(500).json({ error: 'Failed to create job post' });
             }
         });
     }
 }
-exports.ListModel = ListModel;
-//# sourceMappingURL=ListModel.js.map
+exports.JobPostModel = JobPostModel;
+//# sourceMappingURL=JobPostModel.js.map

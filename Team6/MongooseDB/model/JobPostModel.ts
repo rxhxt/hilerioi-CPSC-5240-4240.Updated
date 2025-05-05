@@ -34,7 +34,7 @@ class JobPostModel {
 
     public async createModel() {
         try {
-            await Mongoose.connect(this.dbConnectionString, {useNewUrlParser: true, useUnifiedTopology: true});
+            await Mongoose.connect(this.dbConnectionString);
             this.model = Mongoose.model<IJobPostModel>("JobPost", this.schema);
         }
         catch (e) {
@@ -68,17 +68,18 @@ class JobPostModel {
 
     public async CreateJobPost(response:any, data:any) {
         console.log('Creating job post with data: ' + JSON.stringify(data));
-        const newJobPost = new this.model(data);
-
-        const query = newJobPost.save();
         try {
-            const result = await query.exec();
+            const newJobPost = new this.model(data);
+            // Save directly returns a Promise, so just await it
+            const result = await newJobPost.save();
             response.json(result);
         }
         catch (e) {
             console.error(e);
+            response.status(500).json({ error: 'Failed to create job post' });
         }
     }
+        
         
 }
 export {JobPostModel};
