@@ -1,6 +1,6 @@
 db.createCollection('appliedjobs');
 appliedjobsCollection = db.getCollection("appliedjobs");
-appliedjobsCollection.remove({});
+appliedjobsCollection.deleteMany({});
 
 appliedjobsCollection.insertMany([
   {

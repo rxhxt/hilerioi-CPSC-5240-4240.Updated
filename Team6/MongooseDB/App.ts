@@ -1,7 +1,7 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import { JobPostRoutes } from './JobPostRoutes';
-import { JobPostModel } from '../MongooseDB/model/JobPostModel';
+import { JobPostModel } from './model/JobPostModel';
 
 class App {
   public express: express.Application;
@@ -23,7 +23,10 @@ class App {
   }
 
   private routes(): void {
-    const jobPostModel = new JobPostModel(process.env.DB_CONNECTION_STRING || '');
+    const dbConnectionString = process.env.DB_INFO || '';
+    console.log("Using database connection:", dbConnectionString);
+    
+    const jobPostModel = new JobPostModel(dbConnectionString);
     const jobPostRoutes = new JobPostRoutes(jobPostModel);
     this.express.use('/', jobPostRoutes.getRouter());
 

@@ -74,14 +74,15 @@ class JobPostModel {
     CreateJobPost(response, data) {
         return __awaiter(this, void 0, void 0, function* () {
             console.log('Creating job post with data: ' + JSON.stringify(data));
-            const newJobPost = new this.model(data);
-            const query = newJobPost.save();
             try {
-                const result = yield query.exec();
+                const newJobPost = new this.model(data);
+                // Save directly returns a Promise, so just await it
+                const result = yield newJobPost.save();
                 response.json(result);
             }
             catch (e) {
                 console.error(e);
+                response.status(500).json({ error: 'Failed to create job post' });
             }
         });
     }

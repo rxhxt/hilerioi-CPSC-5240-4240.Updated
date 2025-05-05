@@ -1,7 +1,7 @@
 db = db.getSiblingDB('jobfetchr');
 db.createCollection('jobposts');
 jobpostsCollection = db.getCollection("jobposts");
-jobpostsCollection.remove({});
+jobpostsCollection.deleteMany({});
 
 jobpostsCollection.insertMany([
   {

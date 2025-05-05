@@ -30,7 +30,7 @@ class AppliedJobModel {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield Mongoose.connect(this.dbConnectionString);
-                this.model = Mongoose.model("Task", this.schema);
+                this.model = Mongoose.model("AppliedJob", this.schema);
             }
             catch (e) {
                 console.error(e);
@@ -53,7 +53,7 @@ class AppliedJobModel {
     retrieveAppliedJobById(response, appliedJobId) {
         return __awaiter(this, void 0, void 0, function* () {
             console.log('Retrieving applied job with id: ' + appliedJobId);
-            const query = this.model.findOne({ appliedId: appliedJobId });
+            const query = this.model.findOne({ appliedJobId: appliedJobId });
             try {
                 const appliedJob = yield query.exec();
                 response.json(appliedJob);
