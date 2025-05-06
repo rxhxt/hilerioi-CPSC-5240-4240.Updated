@@ -2,6 +2,8 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import { JobPostRoutes } from './JobPostRoutes';
 import { JobPostModel } from './model/JobPostModel';
+import { AppliedJobRoutes } from './AppliedJobRoutes';
+import { AppliedJobModel } from './model/AppliedJobModel';
 
 class App {
   public express: express.Application;
@@ -27,10 +29,14 @@ class App {
     console.log("Using database connection:", dbConnectionString);
     
     const jobPostModel = new JobPostModel(dbConnectionString);
-    const jobPostRoutes = new JobPostRoutes(jobPostModel);
+    const jobPostRoutes = new JobPostRoutes(jobPostModel);   
     this.express.use('/', jobPostRoutes.getRouter());
 
-    // Static file serving
+    const appliedJobModel = new AppliedJobModel(dbConnectionString);
+    const appliedJobRoutes = new AppliedJobRoutes(appliedJobModel);
+    this.express.use('/', appliedJobRoutes.getRouter());
+
+    //static files
     this.express.use('/images', express.static(__dirname + '/img'));
     this.express.use('/data', express.static(__dirname + '/json'));
     this.express.use('/', express.static(__dirname + '/pages'));

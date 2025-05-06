@@ -19,7 +19,12 @@ class AppliedJobModel {
     }
     createSchema() {
         this.schema = new Mongoose.Schema({
-            appliedJobId: String,
+            appliedJobId: {
+                type: String,
+                unique: true,
+                required: true,
+                index: true
+            },
             user_id: String,
             job_id: String,
             applied_date: Date,
@@ -66,10 +71,9 @@ class AppliedJobModel {
     createAppliedJob(response, appliedJob) {
         return __awaiter(this, void 0, void 0, function* () {
             console.log('Creating applied job: ' + JSON.stringify(appliedJob));
-            const newAppliedJob = new this.model(appliedJob);
-            const query = newAppliedJob.save();
             try {
-                const result = yield query.exec();
+                const newAppliedJob = new this.model(appliedJob);
+                const result = yield newAppliedJob.save();
                 response.json(result);
             }
             catch (e) {

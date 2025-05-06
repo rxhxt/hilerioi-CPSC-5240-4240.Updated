@@ -15,7 +15,12 @@ class JobPostModel {
     public createSchema() {
         this.schema = new Mongoose.Schema(
             {
-                jobPostId: String,
+                jobPostId: { 
+                    type: String, 
+                    unique: true, 
+                    required: true,
+                    index: true 
+                },
                 position_title: String,
                 location: String,
                 date_posted: Date,

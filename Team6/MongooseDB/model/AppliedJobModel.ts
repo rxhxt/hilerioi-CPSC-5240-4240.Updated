@@ -1,13 +1,13 @@
 import * as Mongoose from "mongoose";
-import {IAppliedJobModel} from '../interfaces/IAppliedJobModel';
+import { IAppliedJobModel } from '../interfaces/IAppliedJobModel';
 
 class AppliedJobModel {
-    public schema:any;
-    public innerSchema:any;
-    public model:any;
-    public dbConnectionString:string;
+    public schema: any;
+    public innerSchema: any;
+    public model: any;
+    public dbConnectionString: string;
 
-    public constructor(DB_CONNECTION_STRING:string) {
+    public constructor(DB_CONNECTION_STRING: string) {
         this.dbConnectionString = DB_CONNECTION_STRING;
         this.createSchema();
         this.createModel();
@@ -16,26 +16,31 @@ class AppliedJobModel {
     public createSchema(): void {
         this.schema = new Mongoose.Schema(
             {
-                appliedJobId: String,
+                appliedJobId: {
+                    type: String,
+                    unique: true,
+                    required: true,
+                    index: true
+                },
                 user_id: String,
                 job_id: String,
                 applied_date: Date,
                 status: String
-            }, {collection: 'appliedjobs'}
+            }, { collection: 'appliedjobs' }
         );
     }
 
     public async createModel() {
         try {
             await Mongoose.connect(this.dbConnectionString);
-            this.model = Mongoose.model<IAppliedJobModel>("AppliedJob", this.schema);    
+            this.model = Mongoose.model<IAppliedJobModel>("AppliedJob", this.schema);
         }
         catch (e) {
-            console.error(e);        
+            console.error(e);
         }
     }
-    
-    public async retrieveAllAppliedJobs(response:any) {
+
+    public async retrieveAllAppliedJobs(response: any) {
         console.log('Retrieving all applied jobs');
         const query = this.model.find({});
         try {
@@ -47,9 +52,9 @@ class AppliedJobModel {
         }
     }
 
-    public async retrieveAppliedJobById(response:any, appliedJobId:string) {
+    public async retrieveAppliedJobById(response: any, appliedJobId: string) {
         console.log('Retrieving applied job with id: ' + appliedJobId);
-        const query = this.model.findOne({appliedJobId: appliedJobId});
+        const query = this.model.findOne({ appliedJobId: appliedJobId });
         try {
             const appliedJob = await query.exec();
             response.json(appliedJob);
@@ -59,12 +64,11 @@ class AppliedJobModel {
         }
     }
 
-    public async createAppliedJob(response:any, appliedJob:any) {
+    public async createAppliedJob(response: any, appliedJob: any) {
         console.log('Creating applied job: ' + JSON.stringify(appliedJob));
-        const newAppliedJob = new this.model(appliedJob);
-        const query = newAppliedJob.save();
         try {
-            const result = await query.exec();
+            const newAppliedJob = new this.model(appliedJob);
+            const result = await newAppliedJob.save();
             response.json(result);
         }
         catch (e) {
@@ -72,4 +76,4 @@ class AppliedJobModel {
         }
     }
 }
-export {AppliedJobModel};
+export { AppliedJobModel };

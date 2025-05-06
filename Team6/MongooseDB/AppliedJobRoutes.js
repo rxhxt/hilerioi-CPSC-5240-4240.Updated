@@ -9,33 +9,33 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.JobPostRoutes = void 0;
+exports.AppliedJobRoutes = void 0;
 const express = require("express");
-class JobPostRoutes {
-    constructor(jobPostModel) {
+class AppliedJobRoutes {
+    constructor(appliedJobModel) {
         this.router = express.Router();
-        this.jobPostModel = jobPostModel;
+        this.appliedJobModel = appliedJobModel;
         this.configureRoutes();
     }
     configureRoutes() {
-        // Get all job posts
-        this.router.get('/api/v1/jobposts', (req, res) => __awaiter(this, void 0, void 0, function* () {
-            yield this.jobPostModel.retrieveAllJobPosts(res);
+        // Get all applied jobs
+        this.router.get("/api/v1/appliedjobs", (req, res) => __awaiter(this, void 0, void 0, function* () {
+            yield this.appliedJobModel.retrieveAllAppliedJobs(res);
         }));
-        // Get job post by id
-        this.router.get('/api/v1/jobposts/:jobPostId', (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const jobPostId = req.params.jobPostId;
-            yield this.jobPostModel.retrieveJobPostsById(res, jobPostId);
+        // Get one by ID
+        this.router.get("/api/v1/appliedjobs/:appliedJobId", (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.appliedJobId;
+            yield this.appliedJobModel.retrieveAppliedJobById(res, id);
         }));
-        // Create new job post
-        this.router.post('/api/v1/jobposts', (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const jobPostData = req.body;
-            yield this.jobPostModel.CreateJobPost(res, jobPostData);
+        // Create a new application record
+        this.router.post("/api/v1/appliedjobs", (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const payload = req.body;
+            yield this.appliedJobModel.createAppliedJob(res, payload);
         }));
     }
     getRouter() {
         return this.router;
     }
 }
-exports.JobPostRoutes = JobPostRoutes;
-//# sourceMappingURL=JobPostRoutes.js.map
+exports.AppliedJobRoutes = AppliedJobRoutes;
+//# sourceMappingURL=AppliedJobRoutes.js.map

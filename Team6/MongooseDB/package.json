@@ -11,7 +11,8 @@
     "mongoose": "^8.14.1"
   },
   "scripts": {
-    "start": "ts-node AppServer.ts",
+    "start": "node AppServer.js",
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

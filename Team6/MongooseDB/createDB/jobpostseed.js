@@ -11,7 +11,7 @@ jobpostsCollection.insertMany([
     date_posted: new Date("2024-10-01"),
     company: "Microsoft",
     recruiter: "Giorgio Himothy",
-    job_description: "Develop Azure Type Shi.",
+    job_description: "Develop Azure Type.",
     salary: 130000,
     status: "active",
     scrape_date: new Date(),
