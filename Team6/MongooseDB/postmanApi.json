@@ -1,0 +1,94 @@
+{
+  "info": {
+    "name": "JobFetchr API Tests",
+    "description": "API endpoints for JobFetchr application",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get All Job Posts",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8080/api/v1/jobposts",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "v1", "jobposts"]
+        }
+      }
+    },
+    {
+      "name": "Create New Job Post",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/v1/jobposts",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "v1", "jobposts"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"jobPostId\": \"TEST001\",\n    \"position_title\": \"Software Engineer\",\n    \"location\": \"Seattle, WA\",\n    \"company\": \"Tech Company\",\n    \"date_posted\": \"2025-05-05\",\n    \"recruiter\": \"John Doe\",\n    \"job_description\": \"Develop and maintain software applications\",\n    \"salary\": 120000,\n    \"status\": \"Open\",\n    \"url\": \"https://example.com/jobs/123\",\n    \"job_work_type\": \"Full-time\",\n    \"is_remote\": true\n}"
+        }
+      }
+    },
+    {
+      "name": "Get Specific Job Post",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8080/api/v1/jobposts/TEST001",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "v1", "jobposts", "TEST001"]
+        }
+      }
+    },
+    {
+      "name": "Update Job Post",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/v1/jobposts/TEST001",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "v1", "jobposts", "TEST001"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"position_title\": \"Senior Software Engineer\",\n    \"salary\": 150000\n}"
+        }
+      }
+    },
+    {
+      "name": "Delete Job Post",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "http://localhost:8080/api/v1/jobposts/TEST001",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "v1", "jobposts", "TEST001"]
+        }
+      }
+    }
+  ]
+}
