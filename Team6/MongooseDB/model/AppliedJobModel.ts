@@ -27,8 +27,8 @@ class AppliedJobModel {
 
     public async createModel() {
         try {
-            await Mongoose.connect(this.dbConnectionString, {useNewUrlParser: true, useUnifiedTopology: true});
-            this.model = Mongoose.model<IAppliedJobModel>("Task", this.schema);    
+            await Mongoose.connect(this.dbConnectionString);
+            this.model = Mongoose.model<IAppliedJobModel>("AppliedJob", this.schema);    
         }
         catch (e) {
             console.error(e);        
@@ -49,7 +49,7 @@ class AppliedJobModel {
 
     public async retrieveAppliedJobById(response:any, appliedJobId:string) {
         console.log('Retrieving applied job with id: ' + appliedJobId);
-        const query = this.model.findOne({appliedId: appliedJobId});
+        const query = this.model.findOne({appliedJobId: appliedJobId});
         try {
             const appliedJob = await query.exec();
             response.json(appliedJob);

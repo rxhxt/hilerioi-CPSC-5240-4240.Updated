@@ -23,7 +23,7 @@
       "node_modules/@types"
     ],
   },
-  "includes" : [
+  "include" : [
     "**/*"
   ],
   "exclude": [
