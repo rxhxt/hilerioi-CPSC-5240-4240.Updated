@@ -1,5 +1,5 @@
 import * as express from "express";
-import { AppliedJobModel } from "../MongooseDB/model/AppliedJobModel";
+import { AppliedJobModel } from "./model/AppliedJobModel";
 
 class AppliedJobRoutes {
   private router: express.Router;

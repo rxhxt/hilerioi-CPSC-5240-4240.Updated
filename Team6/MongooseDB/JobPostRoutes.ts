@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { JobPostModel } from '../MongooseDB/model/JobPostModel';
+import { JobPostModel } from './model/JobPostModel';
 
 
 class JobPostRoutes {
