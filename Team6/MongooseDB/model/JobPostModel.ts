@@ -1,5 +1,6 @@
 import * as Mongoose from "mongoose";
 import {IJobPostModel} from '../interfaces/IJobPostModel';
+const crypto = require('crypto');
 
 class JobPostModel {
     public schema:any;
@@ -74,8 +75,13 @@ class JobPostModel {
     public async CreateJobPost(response:any, data:any) {
         console.log('Creating job post with data: ' + JSON.stringify(data));
         try {
-            const newJobPost = new this.model(data);
-            // Save directly returns a Promise, so just await it
+            const uniqueId = crypto.randomBytes(16).toString('hex');
+            const jobPostData = {
+            ...data,
+            jobPostId: uniqueId
+            };
+
+            const newJobPost = new this.model(jobPostData);
             const result = await newJobPost.save();
             response.json(result);
         }

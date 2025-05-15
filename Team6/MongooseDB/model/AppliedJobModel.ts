@@ -1,5 +1,6 @@
 import * as Mongoose from "mongoose";
 import { IAppliedJobModel } from '../interfaces/IAppliedJobModel';
+const crypto = require('crypto');
 
 class AppliedJobModel {
     public schema: any;
@@ -67,6 +68,7 @@ class AppliedJobModel {
     public async createAppliedJob(response: any, appliedJob: any) {
         console.log('Creating applied job: ' + JSON.stringify(appliedJob));
         try {
+            appliedJob.appliedJobId = crypto.randomBytes(16).toString('hex');
             const newAppliedJob = new this.model(appliedJob);
             const result = await newAppliedJob.save();
             response.json(result);
