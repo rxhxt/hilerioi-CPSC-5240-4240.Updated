@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppliedJobModel = void 0;
 const Mongoose = require("mongoose");
+const crypto = require('crypto');
 class AppliedJobModel {
     constructor(DB_CONNECTION_STRING) {
         this.dbConnectionString = DB_CONNECTION_STRING;
@@ -72,6 +73,7 @@ class AppliedJobModel {
         return __awaiter(this, void 0, void 0, function* () {
             console.log('Creating applied job: ' + JSON.stringify(appliedJob));
             try {
+                appliedJob.appliedJobId = crypto.randomBytes(16).toString('hex');
                 const newAppliedJob = new this.model(appliedJob);
                 const result = yield newAppliedJob.save();
                 response.json(result);

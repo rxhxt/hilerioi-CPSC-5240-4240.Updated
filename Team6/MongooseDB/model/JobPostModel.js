@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.JobPostModel = void 0;
 const Mongoose = require("mongoose");
+const crypto = require('crypto');
 class JobPostModel {
     constructor(DB_CONNECTION_STRING) {
         this.dbConnectionString = DB_CONNECTION_STRING;
@@ -80,8 +81,9 @@ class JobPostModel {
         return __awaiter(this, void 0, void 0, function* () {
             console.log('Creating job post with data: ' + JSON.stringify(data));
             try {
-                const newJobPost = new this.model(data);
-                // Save directly returns a Promise, so just await it
+                const uniqueId = crypto.randomBytes(16).toString('hex');
+                const jobPostData = Object.assign(Object.assign({}, data), { jobPostId: uniqueId });
+                const newJobPost = new this.model(jobPostData);
                 const result = yield newJobPost.save();
                 response.json(result);
             }
