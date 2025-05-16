@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
-import { JobproxyService } from '../../service/jobproxy.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { JobproxyService, JobPost } from '../../service/jobproxy.service';
 @Component({
   selector: 'app-jobdetail',
   standalone: false,
@@ -8,12 +8,24 @@ import { JobproxyService } from '../../service/jobproxy.service';
   styleUrl: './jobdetail.component.css'
 })
 export class JobdetailComponent {
-  job: any;
 
-  constructor(private route: ActivatedRoute, private jobService: JobproxyService) {
-    const id = this.route.snapshot.params['id'];
-    this.jobService.getJobById(id).subscribe((res) => {
-      this.job = res;
+  jobPost?: JobPost;
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private jobService: JobproxyService
+  ) {
+    const jobId = this.route.snapshot.paramMap.get('id') || '';
+    this.jobService.getJobById(jobId).subscribe((data) => {
+      this.jobPost = data;
+      console.log("Retrieved job post data.");
     });
+  }
+
+  ngOnInit(): void {}
+
+  clickEvent(): void {
+    this.router.navigate(['/']);
   }
 }
