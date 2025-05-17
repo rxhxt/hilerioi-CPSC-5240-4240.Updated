@@ -9,7 +9,7 @@ import { JobproxyService, JobPost } from '../../../jobproxy.service';
   styleUrl: './joblistings.component.css'
 })
 export class JoblistingsComponent {
-  logoPath: string = '';
+  logoPath: string = 'Team6/job-fetchr/src/app/pages/welcomepage/img/logo-white.png';
   jobPosts: JobPost[] = [];
   loadingJobs: boolean = true;
   errorMessage: string = '';
