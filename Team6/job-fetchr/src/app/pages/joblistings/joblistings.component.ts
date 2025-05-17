@@ -13,6 +13,7 @@ export class JoblistingsComponent {
   jobPosts: JobPost[] = [];
   loadingJobs: boolean = true;
   errorMessage: string = '';
+  searchTerm: string = '';
 
   constructor( private jobproxyService: JobproxyService, private router: Router){}
 
@@ -38,5 +39,18 @@ export class JoblistingsComponent {
 
   viewJobDetails(jobPostId: string): void{
     this.router.navigate(['/job', jobPostId]);
+  }
+
+  get filteredJobs(): JobPost[] {
+    if(!this.searchTerm?.trim()) {
+      return this.jobPosts;
+    }
+
+    const term = this.searchTerm.toLowerCase();
+    return this.jobPosts.filter( job => 
+      job.title.toLowerCase().includes(term) ||
+      job.company.toLowerCase().includes(term) || 
+      job.location.toLowerCase().includes(term)
+    );
   }
 }
