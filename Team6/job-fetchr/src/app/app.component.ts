@@ -8,4 +8,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'job-fetchr';
+  logoPath: string = 'assets/images/logo-white.png';
 }

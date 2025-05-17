@@ -8,7 +8,7 @@ import { JobproxyService, JobPost } from '../../../jobproxy.service';
   styleUrl: './welcomepage.component.css'
 })
 export class WelcomepageComponent {
-  logoPath: string = 'img/logo-white.png'; // Adjust this path based on your project structure
+  // Adjust this path based on your project structure
   jobPosts: JobPost[] = [];
   loadingJobs: boolean = false;
   errorMessage: string = '';

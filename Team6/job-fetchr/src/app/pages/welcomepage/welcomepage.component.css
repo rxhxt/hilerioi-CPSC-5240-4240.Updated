@@ -5,3 +5,24 @@
   background-color: rgb(23, 95, 228);
   color: white;
 }
+.welcome-section {
+  padding-top: 4rem !important;
+  padding-bottom: 4rem !important;
+  background: linear-gradient(to right, #ffffff, #f8f9fa);
+}
+
+.welcome-section h1 {
+  margin-bottom: 1rem;
+}
+
+.btn-primary {
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}

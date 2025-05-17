@@ -1,13 +1,23 @@
-<div class="container">
-  <header class="d-flex justify-content-center py-3">
-    <ul class="nav nav-pills">
-      <li class="nav-item"><a href="\" class="nav-link active" aria-current="page">Home</a></li>
-      <li class="nav-item"><a href="\jobs" class="nav-link">Job Search</a></li>
-      <li class="nav-item"><a href="#" class="nav-link">Alerts</a></li>
-      <li class="nav-item"><a href="#" class="nav-link">AI Tools</a></li>
-      <li class="nav-item"><a href="#" class="nav-link">About</a></li>
-    </ul>
-  </header>
-</div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/">
+      <img [src]="logoPath" height="50" alt="JobFetchr" class="d-inline-block align-text-top">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+      aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link"><i class="bi bi-house me-1"></i>Home</a></li>
+        <li class="nav-item"><a routerLink="/jobs" routerLinkActive="active" class="nav-link"><i class="bi bi-briefcase me-1"></i>Job Search</a></li>
+        <li class="nav-item"><a routerLink="/alerts" routerLinkActive="active" class="nav-link"><i class="bi bi-bell me-1"></i>Alerts</a></li>
+        <li class="nav-item"><a routerLink="/ai-tools" routerLinkActive="active" class="nav-link"><i class="bi bi-robot me-1"></i>AI Tools</a></li>
+        <li class="nav-item"><a routerLink="/about" routerLinkActive="active" class="nav-link"><i class="bi bi-info-circle me-1"></i>About</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
 <router-outlet />
 

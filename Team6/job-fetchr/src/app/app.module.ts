@@ -4,23 +4,27 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { RouterModule } from '@angular/router';
 
 import { JobproxyService } from './service/jobproxy.service';
 import { WelcomepageComponent } from './pages/welcomepage/welcomepage.component';
 import { JoblistingsComponent } from './pages/joblistings/joblistings.component';
-import { JobdetailComponent } from './pages/jobdetail/jobdetail.component';
+// import { JobdetailComponent } from './pages/jobdetail/jobdetail.component';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
     AppComponent,
     WelcomepageComponent,
     JoblistingsComponent,
-    JobdetailComponent
+    // JobdetailComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    CommonModule,
+    RouterModule
   ],
   providers: [JobproxyService],
   bootstrap: [AppComponent]
