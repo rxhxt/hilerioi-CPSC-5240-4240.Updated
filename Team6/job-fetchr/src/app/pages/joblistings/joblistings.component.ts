@@ -35,4 +35,8 @@ export class JoblistingsComponent {
       }
     });
   }
+
+  viewJobDetails(jobPostId: string): void{
+    this.router.navigate(['/job', jobPostId]);
+  }
 }
