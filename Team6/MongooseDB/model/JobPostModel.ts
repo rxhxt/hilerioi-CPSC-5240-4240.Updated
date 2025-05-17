@@ -77,10 +77,21 @@ class JobPostModel {
         try {
             const uniqueId = crypto.randomBytes(16).toString('hex');
             const jobPostData = {
-            ...data,
-            jobPostId: uniqueId
+                jobPostId: uniqueId,
+                position_title: data.position_title,
+                location: data.location,
+                date_posted: data.date_posted || new Date(),
+                company: data.company,
+                recruiter: data.recruiter,
+                job_description: data.job_description,
+                salary: data.salary,
+                status: data.status,
+                scrape_date: data.scrape_date || new Date(),
+                url: data.url,
+                job_work_type: data.job_work_type,
+                is_remote: data.is_remote
             };
-
+            console.log('Job post data to be saved: ' + JSON.stringify(jobPostData));
             const newJobPost = new this.model(jobPostData);
             const result = await newJobPost.save();
             response.json(result);
