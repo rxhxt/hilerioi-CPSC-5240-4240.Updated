@@ -107,13 +107,13 @@
   </div>
 
   <!-- Error message -->
-  <div *ngIf="error && !loading" class="alert alert-danger" role="alert">
-    {{ error }}
+  <div *ngIf="errorMessage && !loading" class="alert alert-danger" role="alert">
+    {{ errorMessage }}
     <button class="btn btn-sm btn-outline-danger ms-3" (click)="loadJobPosts()">Try Again</button>
   </div>
 
   <!-- No jobs message -->
-  <div *ngIf="!loading && filteredJobs.length === 0 && !error" class="text-center py-5">
+  <div *ngIf="!loading && filteredJobs.length === 0 && !errorMessage" class="text-center py-5">
     <i class="bi bi-briefcase-fill text-muted fs-1"></i>
     <p class="mt-2">No job listings match your search criteria.</p>
   </div>
