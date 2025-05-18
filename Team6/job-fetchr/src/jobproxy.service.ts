@@ -12,7 +12,7 @@ export interface JobPost {
   requirements: string[];
   salary?: string;
   contactEmail: string;
-  datePosted: Date;
+  date_posted: Date;
   isActive: boolean;
 }
 
