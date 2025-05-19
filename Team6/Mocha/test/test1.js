@@ -63,6 +63,13 @@ describe('Test JobListing results', function(){
         const job = requestResult[0];
         expect(isNan(Date.parse(job.datePosed))).to.be.false;
     });
+
+      it('Should handle specific field validation', function(){
+        const job = requestResult[0];
+        expect(job.requirements).to.be.an('array').that.is.not.empty;
+        expect(job.title.length).to.be.greaterThan(0);
+        expect(job.company.length).to.be.greaterThan(0);
+    });
     
 });
 
