@@ -35,15 +35,21 @@ describe('Test JobListing results', function(){
 
     it('The entries in the array have the expected fields from JobPost interface', function(){
         expect(requestResult[0]).to.include.all.keys(
-           '_id',
-            'title',
-            'company',
-            'location',
-            'description',
-            'requirements',
-            'contactEmail',
-            'datePosted',
-            'isActive' 
+        "_id",
+        "jobPostId",
+        "position_title",
+        "location",
+        "date_posted",
+        "company",
+        "recruiter",
+        "job_description",
+        "salary",
+        "status",
+        "url",
+        "job_work_type",
+        "is_remote",
+        "__v"
+ 
         );
     });
 
