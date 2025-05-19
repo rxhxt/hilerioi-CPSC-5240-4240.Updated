@@ -33,7 +33,19 @@ describe('Test JobListing results', function(){
         expect(response).to.have.headers;
     });
 
-    
+    it('The entries in the array have the expected fields from JobPost interface', function(){
+        expect(requestResult[0]).to.include.all.keys(
+           '_id',
+            'title',
+            'company',
+            'location',
+            'description',
+            'requirements',
+            'contactEmail',
+            'datePosted',
+            'isActive' 
+        );
+    });
     
 });
 
