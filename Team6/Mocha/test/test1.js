@@ -46,6 +46,18 @@ describe('Test JobListing results', function(){
             'isActive' 
         );
     });
+
+    it('The job post data has the correct types', function(){
+        const job = requestResult[0];
+        expect(job._id).to.be.a('string');
+        expect(job.title).to.be.a('string');
+        expect(job.company).to.be.a('string');
+        expect(job.location).to.be.a('string');
+        expect(job.description).to.be.a('string');
+        expect(job.requirements).to.be.an('array');
+        expect(job.contactEmail).to.be.a('string');
+        expect(job.isActive).to.be.a('boolean');
+    });
     
 });
 
