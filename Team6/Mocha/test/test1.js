@@ -71,6 +71,13 @@ describe('Test JobListing results', function(){
         expect(job.company.length).to.be.greaterThan(0);
     });
     
+     it('Should match the expected data format for UI rendering', function(){
+        const job = requestResult[0];
+       expect(job).to.have.property('title');
+        expect(job).to.have.property('company');
+        expect(job).to.have.property('location');
+        expect(job).to.have.property('datePosted');
+    });
 });
 
 
