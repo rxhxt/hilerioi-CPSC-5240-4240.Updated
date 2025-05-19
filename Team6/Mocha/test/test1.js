@@ -58,6 +58,11 @@ describe('Test JobListing results', function(){
         expect(job.contactEmail).to.be.a('string');
         expect(job.isActive).to.be.a('boolean');
     });
+
+     it('The datePosted field is a valid date string', function(){
+        const job = requestResult[0];
+        expect(isNan(Date.parse(job.datePosed))).to.be.false;
+    });
     
 });
 
