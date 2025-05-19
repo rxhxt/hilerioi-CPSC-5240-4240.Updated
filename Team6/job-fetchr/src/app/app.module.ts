@@ -11,7 +11,7 @@ import { RouterModule } from '@angular/router';
 import { JobproxyService } from './service/jobproxy.service';
 import { WelcomepageComponent } from './pages/welcomepage/welcomepage.component';
 import { JoblistingsComponent } from './pages/joblistings/joblistings.component';
-// //import { JobdetailComponent } from './pages/jobdetail/jobdetail.component';
+import { JobdetailComponent } from './pages/jobdetail/jobdetail.component';
 import { CommonModule } from '@angular/common';
 
 @NgModule({
@@ -19,7 +19,7 @@ import { CommonModule } from '@angular/common';
     AppComponent,
     WelcomepageComponent,
     JoblistingsComponent,
-    // JobdetailComponent
+    JobdetailComponent
   ],
   imports: [
     BrowserModule,

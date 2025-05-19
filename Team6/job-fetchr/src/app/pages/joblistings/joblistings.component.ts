@@ -96,7 +96,10 @@ export class JoblistingsComponent {
 
   viewJobDetails(jobPostId: string | undefined): void {
     if (jobPostId) {
+      console.log('Navigating to job details for ID:', jobPostId);
       this.router.navigate(['/job', jobPostId]);
+    } else {
+      console.error('Cannot navigate to job details: missing job ID');
     }
   }
 

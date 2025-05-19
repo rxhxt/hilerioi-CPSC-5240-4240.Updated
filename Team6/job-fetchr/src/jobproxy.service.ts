@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 
 export interface JobPost {
   _id?: string;
+  jobPostId: string;
   title: string;
   company: string;
   location: string;
