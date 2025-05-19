@@ -16,10 +16,16 @@
     "typescript": "^4.6.3"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node AppServer.js",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "mocha ./**/job-api.test.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "async": "^3.2.6",
+    "chai": "^4.3.7",
+    "chai-http": "^4.4.0",
+    "mocha": "^10.2.0"
+  }
 }
