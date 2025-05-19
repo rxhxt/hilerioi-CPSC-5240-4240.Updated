@@ -79,10 +79,10 @@ describe('Test JobListing results', function(){
     
      it('Should match the expected data format for UI rendering', function(){
         const job = requestResult[0];
-       expect(job).to.have.property('title');
+       expect(job).to.have.property('position_title');
         expect(job).to.have.property('company');
         expect(job).to.have.property('location');
-        expect(job).to.have.property('datePosted');
+        expect(job).to.have.property('date_posted');
     });
 });
 
