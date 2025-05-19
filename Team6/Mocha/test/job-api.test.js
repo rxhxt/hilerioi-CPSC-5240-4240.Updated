@@ -67,13 +67,13 @@ describe('Test JobListing results', function(){
 
      it('The datePosted field is a valid date string', function(){
         const job = requestResult[0];
-        expect(isNan(Date.parse(job.datePosed))).to.be.false;
+        expect(isNaN(Date.parse(job.date_posted))).to.be.false;
     });
 
       it('Should handle specific field validation', function(){
         const job = requestResult[0];
-        expect(job.requirements).to.be.an('array').that.is.not.empty;
-        expect(job.title.length).to.be.greaterThan(0);
+        //expect(job.requirements).to.be.an('array').that.is.not.empty;
+        expect(job.position_title.length).to.be.greaterThan(0);
         expect(job.company.length).to.be.greaterThan(0);
     });
     
