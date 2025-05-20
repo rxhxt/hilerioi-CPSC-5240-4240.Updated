@@ -26,10 +26,10 @@ describe('Test JobListing results', function () {
             });
     });
 
-    it('Should return an array object with 1 object', function () {
+    it('Should return an array object with 6 object', function () {
         expect(response).to.have.status(200);
         expect(response.body).to.be.an('array');
-        expect(response.body.length).to.be.at.least(5);
+        expect(response.body.length).to.be.at.least(6);
         expect(response).to.have.headers;
     });
 
