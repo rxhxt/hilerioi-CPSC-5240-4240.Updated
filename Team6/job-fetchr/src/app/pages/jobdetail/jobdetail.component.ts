@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { JobproxyService, JobPost } from '../../../jobproxy.service';
+import { JobproxyService, JobPost } from '../../service/jobproxy.service';
 
 @Component({
   selector: 'app-jobdetail',
@@ -53,13 +53,13 @@ export class JobdetailComponent implements OnInit {
     }
   }
 
-formatDate(date: Date | undefined): string {
-    if (!date) return 'N/A';
-    return new Date(date).toLocaleDateString();
-}
+  formatDate(date: Date | undefined): string {
+      if (!date) return 'N/A';
+      return new Date(date).toLocaleDateString();
+  }
 
   applyForJob(): void {
-    // This will be implemented for the job application functionality
+    //TODO: This will be implemented for the job application functionality
     console.log('Apply for job clicked');
   }
 }

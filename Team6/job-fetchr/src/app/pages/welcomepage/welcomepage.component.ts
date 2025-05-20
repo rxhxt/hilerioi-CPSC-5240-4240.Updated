@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { JobproxyService, JobPost } from '../../../jobproxy.service';
+import { JobproxyService, JobPost } from '../../service/jobproxy.service';
 
 @Component({
   selector: 'app-welcomepage',
