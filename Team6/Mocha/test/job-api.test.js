@@ -9,50 +9,50 @@ var should = chai.should();
 var http = require('http');
 chai.use(chaiHttp);
 
-describe('Test JobListing results', function(){
-    
+describe('Test JobListing results', function () {
+
     var requestResult;
     var response;
 
-    before(function(done){
+    before(function (done) {
         chai.request("http://localhost:8080")
-        .get("/api/v1/jobposts")
-        .end(function (err, res){
-            requestResult = res.body;
-            response = res;
-            expect(err).to.be.null;
-            expect(res).to.have.status(200);
-            done();
-        });
+            .get("/api/v1/jobposts")
+            .end(function (err, res) {
+                requestResult = res.body;
+                response = res;
+                expect(err).to.be.null;
+                expect(res).to.have.status(200);
+                done();
+            });
     });
 
-    it('Should return an array object with 1 object', function(){
+    it('Should return an array object with 1 object', function () {
         expect(response).to.have.status(200);
         expect(response.body).to.be.an('array');
-        //expect(response.body).to.be.at.least(1); TODO: Fix 
+        // expect(response.body).to.be.at.least(5); TODO: Fix 
         expect(response).to.have.headers;
     });
 
-    it('The entries in the array have the expected fields from JobPost interface', function(){
+    it('The entries in the array have the expected fields from JobPost interface', function () {
         expect(requestResult[0]).to.include.all.keys(
-        "_id",
-        "jobPostId",
-        "position_title",
-        "location",
-        "date_posted",
-        "company",
-        "recruiter",
-        "job_description",
-        "salary",
-        "status",
-        "scrape_date",
-        "url",
-        "job_work_type",
-        "is_remote"
+            "_id",
+            "jobPostId",
+            "position_title",
+            "location",
+            "date_posted",
+            "company",
+            "recruiter",
+            "job_description",
+            "salary",
+            "status",
+            "scrape_date",
+            "url",
+            "job_work_type",
+            "is_remote"
         );
     });
 
-    it('The job post data has the correct types', function(){
+    it('The job post data has the correct types', function () {
         const job = requestResult[0];
         expect(job._id).to.be.a('string');
         expect(job.position_title).to.be.a('string');
@@ -61,23 +61,30 @@ describe('Test JobListing results', function(){
         expect(job.job_description).to.be.a('string');
     });
 
-     it('The datePosted field is a valid date string', function(){
+    it('The datePosted field is a valid date string', function () {
         const job = requestResult[0];
         expect(isNaN(Date.parse(job.date_posted))).to.be.false;
     });
 
-      it('Should handle specific field validation', function(){
+    it('Should handle specific field validation', function () {
         const job = requestResult[0];
         expect(job.position_title.length).to.be.greaterThan(0);
         expect(job.company.length).to.be.greaterThan(0);
     });
-    
-     it('Should match the expected data format for UI rendering', function(){
-        const job = requestResult[0];
-       expect(job).to.have.property('position_title');
-        expect(job).to.have.property('company');
-        expect(job).to.have.property('location');
-        expect(job).to.have.property('date_posted');
+
+    it('The elements in the array have the expected properties', function () {
+        expect(response.body).to.have.length(6);
+        expect(response.body).to.satisfy(
+            function (body) {
+                for (var i = 0; i < body.length; i++) {
+                    const job = body[i];
+                    expect(job).to.have.property('position_title');
+                    expect(job).to.have.property('company');
+                    expect(job).to.have.property('location');
+                    expect(job).to.have.property('date_posted');
+                }
+                return true;
+            });
     });
 });
 
