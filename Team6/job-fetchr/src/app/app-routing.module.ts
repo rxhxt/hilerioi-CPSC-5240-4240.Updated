@@ -8,7 +8,6 @@ import { JobdetailComponent } from './pages/jobdetail/jobdetail.component';
 const routes: Routes = [
   { path: '', component: WelcomepageComponent },
   { path: 'jobs', component: JoblistingsComponent },
-  // { path: 'job', component: JobdetailComponent },
   { path: 'job/:id', component: JobdetailComponent },
 ];
 
