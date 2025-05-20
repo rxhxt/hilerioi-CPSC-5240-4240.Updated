@@ -6,15 +6,18 @@ import { Observable } from 'rxjs';
 export interface JobPost {
   _id?: string;
   jobPostId: string;
-  title: string;
+  position_title: string;
   company: string;
   location: string;
-  description: string;
-  requirements: string[];
-  salary?: string;
-  contactEmail: string;
+  job_description: string;
+  salary: number;
+  recruiter: string;
   date_posted: Date;
-  isActive: boolean;
+  status: string;
+  scrape_date: Date;
+  url: string;
+  job_work_type: string;
+  is_remote: boolean;
 }
 
 export interface AppliedJob {

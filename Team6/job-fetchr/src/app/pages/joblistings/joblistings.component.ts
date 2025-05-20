@@ -60,10 +60,10 @@ export class JoblistingsComponent {
 
     const term = this.searchTerm.toLowerCase();
     this.filteredJobPosts = this.jobPosts.filter(job => 
-      job.title?.toLowerCase().includes(term) ||
+      job.position_title?.toLowerCase().includes(term) ||
       job.company?.toLowerCase().includes(term) || 
       job.location?.toLowerCase().includes(term) ||
-      job.description?.toLowerCase().includes(term)
+      job.job_description?.toLowerCase().includes(term)
     );
   }
 
