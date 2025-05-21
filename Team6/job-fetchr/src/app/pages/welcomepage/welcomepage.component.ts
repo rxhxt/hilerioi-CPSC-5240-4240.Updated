@@ -7,13 +7,5 @@ import { JobproxyService, JobPost } from '../../service/jobproxy.service';
   templateUrl: './welcomepage.component.html', 
   styleUrl: './welcomepage.component.css'
 })
-export class WelcomepageComponent {
-  // Adjust this path based on your project structure
-  jobPosts: JobPost[] = [];
-  loadingJobs: boolean = false;
-  errorMessage: string = '';
-  
-  constructor(private jobproxyService: JobproxyService) { }
-  
-  ngOnInit(): void {}
-}
+export class WelcomepageComponent {}
+
