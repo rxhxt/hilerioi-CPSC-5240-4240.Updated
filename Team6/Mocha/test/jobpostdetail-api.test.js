@@ -25,14 +25,15 @@ describe('Test Jobpost Detail results', function () {
                 expect(res.body.length).to.be.greaterThan(0);
                 
                 jobId = res.body[0].jobPostId;
+                console.log(jobId);
                 done();
             });
     });
 
     before(function (done) {
         chai.request("http://localhost:8080")
-            .get("/api/v1/job/" + jobId)
-            .end(function (err, res) {
+            .get("/api/v1/jobposts/" + jobId)
+            .end(function (err, res) {    
                 requestResult = res.body;
                 response = res;
                 expect(err).to.be.null;
@@ -67,23 +68,20 @@ describe('Test Jobpost Detail results', function () {
     });
 
     it('The job post data has the correct types', function () {
-        const job = requestResult[0];
-        expect(job._id).to.be.a('string');
-        expect(job.position_title).to.be.a('string');
-        expect(job.company).to.be.a('string');
-        expect(job.location).to.be.a('string');
-        expect(job.job_description).to.be.a('string');
+        expect(requestResult._id).to.be.a('string');
+        expect(requestResult.position_title).to.be.a('string');
+        expect(requestResult.company).to.be.a('string');
+        expect(requestResult.location).to.be.a('string');
+        expect(requestResult.job_description).to.be.a('string');
     });
 
     it('The datePosted field is a valid date string', function () {
-        const job = requestResult[0];
-        expect(isNaN(Date.parse(job.date_posted))).to.be.false;
+        expect(isNaN(Date.parse(requestResult.date_posted))).to.be.false;
     });
 
     it('Should handle specific field validation', function () {
-        const job = requestResult[0];
-        expect(job.position_title.length).to.be.greaterThan(0);
-        expect(job.company.length).to.be.greaterThan(0);
+        expect(requestResult.position_title.length).to.be.greaterThan(0);
+        expect(requestResult.company.length).to.be.greaterThan(0);
     });
 
 });
