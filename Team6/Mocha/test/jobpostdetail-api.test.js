@@ -41,4 +41,29 @@ describe('Test Jobpost Detail results', function () {
             });
     });
 
+    it('Should return a job object with a 200 status code', function () {
+        expect(response).to.have.status(200);
+        expect(response.body).to.be.an('object');
+        expect(response).to.have.headers;
+    });
+
+    it('The job object has all the expected fields from the JobPost interface', function () {
+        expect(requestResult).to.include.all.keys(
+            "_id",
+            "jobPostId",
+            "position_title",
+            "location",
+            "date_posted",
+            "company",
+            "recruiter",
+            "job_description",
+            "salary",
+            "status", 
+            "scrape_date",
+            "url",
+            "job_work_type",
+            "is_remote"
+        );
+    });
+
 });
