@@ -21,7 +21,7 @@
   "scripts": {
     "start": "node AppServer.js",
     "build": "tsc",
-    "test": "mocha ./**/job-api.test.js"
+    "test": "mocha ../**/*-api.test.js"
   },
   "author": "",
   "license": "ISC",
