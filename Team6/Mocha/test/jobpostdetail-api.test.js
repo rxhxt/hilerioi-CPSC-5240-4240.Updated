@@ -66,4 +66,24 @@ describe('Test Jobpost Detail results', function () {
         );
     });
 
+    it('The job post data has the correct types', function () {
+        const job = requestResult[0];
+        expect(job._id).to.be.a('string');
+        expect(job.position_title).to.be.a('string');
+        expect(job.company).to.be.a('string');
+        expect(job.location).to.be.a('string');
+        expect(job.job_description).to.be.a('string');
+    });
+
+    it('The datePosted field is a valid date string', function () {
+        const job = requestResult[0];
+        expect(isNaN(Date.parse(job.date_posted))).to.be.false;
+    });
+
+    it('Should handle specific field validation', function () {
+        const job = requestResult[0];
+        expect(job.position_title.length).to.be.greaterThan(0);
+        expect(job.company.length).to.be.greaterThan(0);
+    });
+
 });
