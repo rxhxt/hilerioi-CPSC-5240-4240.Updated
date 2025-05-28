@@ -2,7 +2,7 @@
   "name": "expressmongoserver",
   "version": "1.0.0",
   "description": "This directory contains two express servers: * AppServer.js - Combined Node/Express web server w/ Mongo Access * Server.js - Encapsulated Node/Express web server w/ Mongo Access",
-  "main": "AppServer.js",
+  "main": "./MongooseDB/AppServer.js",
   "dependencies": {
     "@types/body-parser": "^1.19.2",
     "@types/chai": "^5.2.2",
