@@ -57,6 +57,8 @@ class App {
     this.express.use('/images', express.static(__dirname + '/img'));
     this.express.use('/data', express.static(__dirname + '/json'));
     this.express.use('/', express.static(__dirname + '/pages'));
+    this.express.use('/', express.static(__dirname + '/dist'));
+
   }
 }
 
