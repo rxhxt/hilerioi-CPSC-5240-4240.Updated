@@ -2,7 +2,7 @@
   "name": "expressserver",
   "version": "1.0.0",
   "description": "This directory contains one express servers: * AppServer.ts - express web server with parameter support * App.ts - express server class that is constructed via AppServer.ts",
-  "main": "AppServer.js",
+  "main": "./AppServer.js",
   "dependencies": {
     "body-parser": "^1.20.0",
     "debug": "^4.4.0",
