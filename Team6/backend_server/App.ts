@@ -25,8 +25,25 @@ class App {
   }
 
   private routes(): void {
-    const dbConnectionString = process.env.DB_INFO || '';
-    console.log("Using database connection:", dbConnectionString);
+    // Get environment variables
+    const dbProtocol = process.env.DB_PROTOCAL || 'mongodb://';
+    const dbUser = process.env.DB_USER || '';
+    const dbPassword = process.env.DB_PASSWORD || '';
+    const dbInfo = process.env.DB_INFO || '';
+    
+    // Construct the full MongoDB connection string
+    let dbConnectionString = '';
+    
+    if (dbUser && dbPassword) {
+      // If user and password are provided, include them in the connection string
+      dbConnectionString = `${dbProtocol}${dbUser}:${dbPassword}${dbInfo}`;
+    } else {
+      // If no authentication, just use protocol and info
+      dbConnectionString = `${dbProtocol}${dbInfo}`;
+    }
+    
+    // Log connection string (hide password for security)
+    console.log("Using database connection:", dbConnectionString.replace(/:([^:@]{1,})@/, ':****@'));
     
     const jobPostModel = new JobPostModel(dbConnectionString);
     const jobPostRoutes = new JobPostRoutes(jobPostModel);   
