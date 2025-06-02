@@ -48,9 +48,10 @@ class App {
         this.express.use('/', appliedJobRoutes.getRouter());
         //static files
         this.express.use('/images', express.static(__dirname + '/img'));
-        this.express.use('/data', express.static(__dirname + '/json'));
-        this.express.use('/', express.static(__dirname + '/pages'));
-        this.express.use('/', express.static(__dirname + '/dist'));
+        // this.express.use('/data', express.static(__dirname + '/json'));
+        // this.express.use('/', express.static(__dirname + '/pages'));
+        console.log("Serving static files from: " + __dirname + '/dist/job-fetchr');
+        this.express.use('/', express.static(__dirname + '/dist/job-fetchr'));
     }
 }
 exports.App = App;

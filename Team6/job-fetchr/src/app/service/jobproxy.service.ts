@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+// import { environment } from '../../environments/environment';
 
 
 export interface JobPost {
@@ -34,9 +35,12 @@ export interface AppliedJob {
   providedIn: 'root'
 })
 export class JobproxyService {
-
-  hostUrl:string = 'http://localhost:8080/';
-
+  // Use relative URL in production
+  hostUrl: string = '/';
+  
+  // For local development, you might want:
+  // hostUrl: string = environment.production ? '/' : 'http://localhost:8080/';
+  
   constructor(private httpClient: HttpClient) { }
 
   // JobPost endpoints
