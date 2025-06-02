@@ -17,7 +17,7 @@ class GooglePassport {
         passport.use(new GoogleStrategy({
                 clientID: this.clientId,
                 clientSecret: this.secretId,
-                callbackURL: "/auth/google/callback"
+                callbackURL: process.env.NODE_ENV === 'production'? "https://your-production-domain.com/auth/google/callback" : "http://localhost:8080/auth/google/callback"
             },
             (accessToken, refreshToken, profile, done) => {
                 console.log("inside new password google strategy");
