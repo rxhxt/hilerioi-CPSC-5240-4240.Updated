@@ -17,7 +17,7 @@ describe('Test Jobpost Detail results', function () {
 
     before(function (done) {
         chai.request("http://localhost:8080")
-            .get("/api/v1/jobposts")
+            .get("/api/v1/jobposts/unprotected")
             .end(function (err, res) {
                 expect(err).to.be.null;
                 expect(res).to.have.status(200);
@@ -32,8 +32,8 @@ describe('Test Jobpost Detail results', function () {
 
     before(function (done) {
         chai.request("http://localhost:8080")
-            .get("/api/v1/jobposts/" + jobId)
-            .end(function (err, res) {    
+            .get("/api/v1/jobposts/unprotected/" + jobId)
+            .end(function (err, res) {
                 requestResult = res.body;
                 response = res;
                 expect(err).to.be.null;

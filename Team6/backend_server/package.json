@@ -5,10 +5,15 @@
   "main": "./AppServer.js",
   "dependencies": {
     "body-parser": "^1.20.0",
+    "cookie-parser": "^1.4.7",
     "debug": "^4.4.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "mongoose": "^8.14.1"
+    "express-session": "^1.18.1",
+    "mongoose": "^8.14.1",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-google-oauth20-with-people-api": "^2.0.0"
   },
   "scripts": {
     "start": "node AppServer.js",

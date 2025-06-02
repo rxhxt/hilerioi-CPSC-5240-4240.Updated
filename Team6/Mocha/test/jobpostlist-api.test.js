@@ -16,7 +16,7 @@ describe('Test JobListing results', function () {
 
     before(function (done) {
         chai.request("http://localhost:8080")
-            .get("/api/v1/jobposts")
+            .get("/api/v1/jobposts/unprotected")
             .end(function (err, res) {
                 requestResult = res.body;
                 response = res;
