@@ -73,7 +73,7 @@ class App {
     routes() {
         let router = express.Router();
         // Authentication routes
-        router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+        router.get('/login', passport.authenticate('google', { scope: ['profile', 'email'] }));
         router.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/' }), (req, res) => {
             console.log("Successfully authenticated user");
             res.redirect('/');

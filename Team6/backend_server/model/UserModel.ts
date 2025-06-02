@@ -4,10 +4,8 @@ import { IUserModel } from "../interfaces/IUserModel";
 class UserModel {
   public schema: Mongoose.Schema;
   public model: Mongoose.Model<IUserModel>;
-  public dbConnectionString: string;
 
-  constructor(DB_CONNECTION_STRING: string) {
-    this.dbConnectionString = DB_CONNECTION_STRING;
+  constructor() {
     this.createSchema();
     this.createModel();
   }
@@ -15,7 +13,7 @@ class UserModel {
   private createSchema(): void {
     this.schema = new Mongoose.Schema(
       {
-        googleId: { type: String, unique: true, required: true },
+        ssoID: { type: String, unique: true, required: true },
         displayName: { type: String, required: true },
         email: { type: String, unique: true, required: true },
         photo: { type: String },
@@ -25,25 +23,34 @@ class UserModel {
     );
   }
 
-  private async createModel(): Promise<void> {
-    try {
-      await Mongoose.connect(this.dbConnectionString);
-      this.model = Mongoose.model<IUserModel>("User", this.schema);
-    } catch (e) {
-      console.error("Error creating User model:", e);
-    }
+  private createModel(): void {
+    this.model = Mongoose.model<IUserModel>("User", this.schema);
   }
 
   public async findOrCreateUser(profile: any): Promise<IUserModel> {
     try {
-      const existingUser = await this.model.findOne({ googleId: profile.id });
+      // Check if a user with the same SSO ID already exists
+      let existingUser = await this.model.findOne({ ssoID: profile.id });
       if (existingUser) {
-        console.log("User already exists:", existingUser);
+        console.log("User already exists with ssoID:", existingUser);
         return existingUser;
       }
 
+      // Check if a user with the same email already exists
+      existingUser = await this.model.findOne({ email: profile.emails?.[0]?.value });
+      if (existingUser) {
+        console.log("User already exists with email:", existingUser);
+        // Update the SSO ID if it is missing or outdated
+        if (!existingUser.ssoID) {
+          existingUser.ssoID = profile.id;
+          await existingUser.save();
+        }
+        return existingUser;
+      }
+
+      // Create a new user if no existing user is found
       const newUser = new this.model({
-        googleId: profile.id,
+        ssoID: profile.id, // Use profile.id as the SSO ID
         displayName: profile.displayName,
         email: profile.emails?.[0]?.value,
         photo: profile.photos?.[0]?.value

@@ -1,33 +1,32 @@
 import * as passport from 'passport';
 import * as dotenv from 'dotenv';
-import { UserModel } from './model/UserModel';
+import { UserModel } from './model/UserModel'
+//let GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 let GoogleStrategy = require('passport-google-oauth20-with-people-api').Strategy;
 
 // Creates a Passport configuration for Google
 class GooglePassport {
+
     clientId: string;
     secretId: string;
     userModel: UserModel;
 
     constructor() {
-        // Get the database connection string from environment variables
+        //get the database connection string from environment variables
         const dbProtocol = process.env.DB_PROTOCAL || 'mongodb://';
         const dbUser = process.env.DB_USER || '';
         const dbPassword = process.env.DB_PASSWORD || '';
         const dbInfo = process.env.DB_INFO || '';
         let dbConnectionString = '';
         if (dbUser && dbPassword) {
-            dbConnectionString = `${dbProtocol}${dbUser}:${dbPassword}${dbInfo}`;
+        dbConnectionString = `${dbProtocol}${dbUser}:${dbPassword}${dbInfo}`;
         } else {
-            dbConnectionString = `${dbProtocol}${dbInfo}`;
+        dbConnectionString = `${dbProtocol}${dbInfo}`;
         }
-
-        // Initialize UserModel
-        this.userModel = new UserModel(dbConnectionString);
+        this.userModel = new UserModel();
         this.clientId = process.env.OAUTH_ID;
         this.secretId = process.env.OAUTH_SECRET;
 
-        // Configure Google Strategy
         passport.use(new GoogleStrategy({
                 clientID: this.clientId,
                 clientSecret: this.secretId,
@@ -38,31 +37,48 @@ class GooglePassport {
             async (accessToken, refreshToken, profile, done) => {
                 console.log("Inside Google strategy");
                 try {
-                    // Find or create the user in the database
-                    const user = await this.userModel.findOrCreateUser(profile);
-                    return done(null, user);
+                  const user = await this.userModel.findOrCreateUser(profile);
+
+                  if (user) {
+                    console.log("User authenticated:", user);
+                    return done(null, user); // Pass the user object to Passport
+                  } else {
+                    return done(new Error("Failed to create or find user"), null);
+                  }
                 } catch (error) {
-                    console.error("Error in Google strategy:", error);
-                    return done(error, null);
+                  console.error("Error in Google strategy:", error);
+                  return done(error, null);
                 }
             }
         ));
 
-        // Serialize user into the session
         passport.serializeUser((user: any, done) => {
-            done(null, user.googleId);
+            console.log("Serializing user:", user);
+            if (user && user.ssoID) {
+                done(null, user.ssoID); // Serialize the user's SSO ID
+            } else {
+                done(new Error("Failed to serialize user: Missing ssoID"), null);
+            }
         });
 
-        // Deserialize user from the session
-        passport.deserializeUser(async (googleId: string, done) => {
-            try {
-                const user = await this.userModel.model.findOne({ googleId });
-                done(null, user);
-            } catch (error) {
-                done(error, null);
+        passport.deserializeUser(async (ssoID: string, done) => {
+          console.log("Deserializing user with ssoID:", ssoID);
+          try {
+            const userModel = new UserModel();
+            const user = await userModel.model.findOne({ ssoID: ssoID });
+
+            if (user) {
+              console.log("Deserialized user:", user);
+              done(null, user); // Pass the user object to req.user
+            } else {
+              console.log("User not found during deserialization");
+              done(null, null); // Return null if the user does not exist
             }
+          } catch (error) {
+            console.error("Error deserializing user:", error);
+            done(error, null);
+          }
         });
     }
 }
-
 export default GooglePassport;

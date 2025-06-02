@@ -1,7 +1,7 @@
 import Mongoose = require("mongoose");
 
 interface IUserModel extends Mongoose.Document {
-  googleId: string; // unique id from Google OAuth
+  ssoID: string; // unique id from Google OAuth
   displayName: string; // display name of the user
   email: string; // email address
   photo: string; // users profile pic

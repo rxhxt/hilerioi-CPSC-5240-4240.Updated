@@ -12,14 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserModel = void 0;
 const Mongoose = require("mongoose");
 class UserModel {
-    constructor(DB_CONNECTION_STRING) {
-        this.dbConnectionString = DB_CONNECTION_STRING;
+    constructor() {
         this.createSchema();
         this.createModel();
     }
     createSchema() {
         this.schema = new Mongoose.Schema({
-            googleId: { type: String, unique: true, required: true },
+            ssoID: { type: String, unique: true, required: true },
             displayName: { type: String, required: true },
             email: { type: String, unique: true, required: true },
             photo: { type: String },
@@ -27,30 +26,35 @@ class UserModel {
         }, { collection: "users" });
     }
     createModel() {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                yield Mongoose.connect(this.dbConnectionString);
-                this.model = Mongoose.model("User", this.schema);
-            }
-            catch (e) {
-                console.error("Error creating User model:", e);
-            }
-        });
+        this.model = Mongoose.model("User", this.schema);
     }
     findOrCreateUser(profile) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a, _b, _c, _d;
+            var _a, _b, _c, _d, _e, _f;
             try {
-                const existingUser = yield this.model.findOne({ googleId: profile.id });
+                // Check if a user with the same SSO ID already exists
+                let existingUser = yield this.model.findOne({ ssoID: profile.id });
                 if (existingUser) {
-                    console.log("User already exists:", existingUser);
+                    console.log("User already exists with ssoID:", existingUser);
                     return existingUser;
                 }
+                // Check if a user with the same email already exists
+                existingUser = yield this.model.findOne({ email: (_b = (_a = profile.emails) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.value });
+                if (existingUser) {
+                    console.log("User already exists with email:", existingUser);
+                    // Update the SSO ID if it is missing or outdated
+                    if (!existingUser.ssoID) {
+                        existingUser.ssoID = profile.id;
+                        yield existingUser.save();
+                    }
+                    return existingUser;
+                }
+                // Create a new user if no existing user is found
                 const newUser = new this.model({
-                    googleId: profile.id,
+                    ssoID: profile.id, // Use profile.id as the SSO ID
                     displayName: profile.displayName,
-                    email: (_b = (_a = profile.emails) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.value,
-                    photo: (_d = (_c = profile.photos) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.value
+                    email: (_d = (_c = profile.emails) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.value,
+                    photo: (_f = (_e = profile.photos) === null || _e === void 0 ? void 0 : _e[0]) === null || _f === void 0 ? void 0 : _f.value
                 });
                 const savedUser = yield newUser.save();
                 console.log("New user created:", savedUser);

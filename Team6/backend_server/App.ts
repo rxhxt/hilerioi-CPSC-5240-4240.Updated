@@ -73,7 +73,7 @@ class App {
 
     
     // Authentication routes
-    router.get('/auth/google',
+    router.get('/login',
       passport.authenticate('google', { scope: ['profile', 'email'] })
     );
 

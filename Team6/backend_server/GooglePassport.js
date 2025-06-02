@@ -11,11 +11,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const passport = require("passport");
 const UserModel_1 = require("./model/UserModel");
+//let GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 let GoogleStrategy = require('passport-google-oauth20-with-people-api').Strategy;
 // Creates a Passport configuration for Google
 class GooglePassport {
     constructor() {
-        // Get the database connection string from environment variables
+        //get the database connection string from environment variables
         const dbProtocol = process.env.DB_PROTOCAL || 'mongodb://';
         const dbUser = process.env.DB_USER || '';
         const dbPassword = process.env.DB_PASSWORD || '';
@@ -27,11 +28,9 @@ class GooglePassport {
         else {
             dbConnectionString = `${dbProtocol}${dbInfo}`;
         }
-        // Initialize UserModel
-        this.userModel = new UserModel_1.UserModel(dbConnectionString);
+        this.userModel = new UserModel_1.UserModel();
         this.clientId = process.env.OAUTH_ID;
         this.secretId = process.env.OAUTH_SECRET;
-        // Configure Google Strategy
         passport.use(new GoogleStrategy({
             clientID: this.clientId,
             clientSecret: this.secretId,
@@ -41,26 +40,45 @@ class GooglePassport {
         }, (accessToken, refreshToken, profile, done) => __awaiter(this, void 0, void 0, function* () {
             console.log("Inside Google strategy");
             try {
-                // Find or create the user in the database
                 const user = yield this.userModel.findOrCreateUser(profile);
-                return done(null, user);
+                if (user) {
+                    console.log("User authenticated:", user);
+                    return done(null, user); // Pass the user object to Passport
+                }
+                else {
+                    return done(new Error("Failed to create or find user"), null);
+                }
             }
             catch (error) {
                 console.error("Error in Google strategy:", error);
                 return done(error, null);
             }
         })));
-        // Serialize user into the session
         passport.serializeUser((user, done) => {
-            done(null, user.googleId);
+            console.log("Serializing user:", user);
+            if (user && user.ssoID) {
+                done(null, user.ssoID); // Serialize the user's SSO ID
+            }
+            else {
+                done(new Error("Failed to serialize user: Missing ssoID"), null);
+            }
         });
-        // Deserialize user from the session
-        passport.deserializeUser((googleId, done) => __awaiter(this, void 0, void 0, function* () {
+        passport.deserializeUser((ssoID, done) => __awaiter(this, void 0, void 0, function* () {
+            console.log("Deserializing user with ssoID:", ssoID);
             try {
-                const user = yield this.userModel.model.findOne({ googleId });
-                done(null, user);
+                const userModel = new UserModel_1.UserModel();
+                const user = yield userModel.model.findOne({ ssoID: ssoID });
+                if (user) {
+                    console.log("Deserialized user:", user);
+                    done(null, user); // Pass the user object to req.user
+                }
+                else {
+                    console.log("User not found during deserialization");
+                    done(null, null); // Return null if the user does not exist
+                }
             }
             catch (error) {
+                console.error("Error deserializing user:", error);
                 done(error, null);
             }
         }));
