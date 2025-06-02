@@ -76,7 +76,7 @@ class App {
         router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
         router.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/' }), (req, res) => {
             console.log("Successfully authenticated user");
-            res.redirect('/#/dashboard');
+            res.redirect('/');
         });
         // JobPost routes
         router.get('/api/v1/jobposts/unprotected', (req, res) => __awaiter(this, void 0, void 0, function* () {

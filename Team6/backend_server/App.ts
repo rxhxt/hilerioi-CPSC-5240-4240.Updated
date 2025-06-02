@@ -81,7 +81,7 @@ class App {
       passport.authenticate('google', { failureRedirect: '/' }),
       (req, res) => {
         console.log("Successfully authenticated user");
-        res.redirect('/#/dashboard');
+        res.redirect('/');
       }
     );
 
