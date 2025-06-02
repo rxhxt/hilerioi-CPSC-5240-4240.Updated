@@ -18,23 +18,42 @@ class JobPostRoutes {
         this.configureRoutes();
     }
     configureRoutes() {
+        // -------------------Non Validated Routes below-------------------
         // Get all job posts
-        this.router.get('/api/v1/jobposts', (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.router.get('/api/v1/jobposts/unprotected', (req, res) => __awaiter(this, void 0, void 0, function* () {
             yield this.jobPostModel.retrieveAllJobPosts(res);
         }));
         // Get job post by id
-        this.router.get('/api/v1/jobposts/:jobPostId', (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.router.get('/api/v1/jobposts/unprotected/:jobPostId', (req, res) => __awaiter(this, void 0, void 0, function* () {
             const jobPostId = req.params.jobPostId;
             yield this.jobPostModel.retrieveJobPostsById(res, jobPostId);
         }));
         // Create new job post
-        this.router.post('/api/v1/jobposts', (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.router.post('/api/v1/jobposts/unprotected', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const jobPostData = req.body;
+            yield this.jobPostModel.CreateJobPost(res, jobPostData);
+        }));
+        // -------------------Validated Routes below-------------------
+        // Get all job posts
+        this.router.get('/api/v1/jobposts', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
+            yield this.jobPostModel.retrieveAllJobPosts(res);
+        }));
+        // Get job post by id
+        this.router.get('/api/v1/jobposts/:jobPostId', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const jobPostId = req.params.jobPostId;
+            yield this.jobPostModel.retrieveJobPostsById(res, jobPostId);
+        }));
+        // Create new job post
+        this.router.post('/api/v1/jobposts', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
             const jobPostData = req.body;
             yield this.jobPostModel.CreateJobPost(res, jobPostData);
         }));
     }
     getRouter() {
         return this.router;
+    }
+    validateAuth(req, res, next) {
+        console.log('Validating authentication');
     }
 }
 exports.JobPostRoutes = JobPostRoutes;

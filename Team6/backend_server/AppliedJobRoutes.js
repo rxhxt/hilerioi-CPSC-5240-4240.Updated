@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppliedJobRoutes = void 0;
 const express = require("express");
+// Ensure validateAuth is used in the routes
 class AppliedJobRoutes {
     constructor(appliedJobModel) {
         this.router = express.Router();
@@ -18,23 +19,42 @@ class AppliedJobRoutes {
         this.configureRoutes();
     }
     configureRoutes() {
+        // -------------------Validated Routes below-------------------
         // Get all applied jobs
-        this.router.get("/api/v1/appliedjobs", (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.router.get("/api/v1/appliedjobs", this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
             yield this.appliedJobModel.retrieveAllAppliedJobs(res);
         }));
         // Get one by ID
-        this.router.get("/api/v1/appliedjobs/:appliedJobId", (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.router.get("/api/v1/appliedjobs/:appliedJobId", this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
             const id = req.params.appliedJobId;
             yield this.appliedJobModel.retrieveAppliedJobById(res, id);
         }));
         // Create a new application record
-        this.router.post("/api/v1/appliedjobs", (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.router.post("/api/v1/appliedjobs", this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const payload = req.body;
+            yield this.appliedJobModel.createAppliedJob(res, payload);
+        }));
+        // -------------------Non Validated Routes below-------------------
+        // Get all applied jobs
+        this.router.get("/api/v1/appliedjobs/unprotected", (req, res) => __awaiter(this, void 0, void 0, function* () {
+            yield this.appliedJobModel.retrieveAllAppliedJobs(res);
+        }));
+        // Get one by ID
+        this.router.get("/api/v1/appliedjobs/unprotected/:appliedJobId", (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.appliedJobId;
+            yield this.appliedJobModel.retrieveAppliedJobById(res, id);
+        }));
+        // Create a new application record
+        this.router.post("/api/v1/appliedjobs/unprotected", (req, res) => __awaiter(this, void 0, void 0, function* () {
             const payload = req.body;
             yield this.appliedJobModel.createAppliedJob(res, payload);
         }));
     }
     getRouter() {
         return this.router;
+    }
+    validateAuth(req, res, next) {
+        console.log('Validating authentication');
     }
 }
 exports.AppliedJobRoutes = AppliedJobRoutes;
