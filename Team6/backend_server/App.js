@@ -68,7 +68,7 @@ class App {
             return next();
         }
         console.log("user is not authenticated");
-        res.redirect('/');
+        res.redirect('/login');
     }
     routes() {
         let router = express.Router();
@@ -127,7 +127,7 @@ class App {
         this.express.use('/', router);
         // Static files
         this.express.use('/images', express.static(__dirname + '/img'));
-        console.log("Serving static files from: " + __dirname + '/dist/job-fetchr');
+        // console.log("Serving static files from: " + __dirname + '/dist/job-fetchr');
         this.express.use('/', express.static(__dirname + '/dist/job-fetchr/browser'));
     }
 }

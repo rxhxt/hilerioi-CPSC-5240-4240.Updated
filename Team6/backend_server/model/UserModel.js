@@ -29,8 +29,8 @@ class UserModel {
         this.model = Mongoose.model("User", this.schema);
     }
     findOrCreateUser(profile) {
+        var _a, _b, _c, _d, _e, _f;
         return __awaiter(this, void 0, void 0, function* () {
-            var _a, _b, _c, _d, _e, _f;
             try {
                 // Check if a user with the same SSO ID already exists
                 let existingUser = yield this.model.findOne({ ssoID: profile.id });
@@ -51,7 +51,7 @@ class UserModel {
                 }
                 // Create a new user if no existing user is found
                 const newUser = new this.model({
-                    ssoID: profile.id, // Use profile.id as the SSO ID
+                    ssoID: profile.id,
                     displayName: profile.displayName,
                     email: (_d = (_c = profile.emails) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.value,
                     photo: (_f = (_e = profile.photos) === null || _e === void 0 ? void 0 : _e[0]) === null || _f === void 0 ? void 0 : _f.value

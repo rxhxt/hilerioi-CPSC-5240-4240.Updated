@@ -52,10 +52,10 @@ class App {
         secure: process.env.NODE_ENV === 'production',
         maxAge: 24 * 60 * 60 * 1000 // 24 hours
       }
-    }));
+    }) as any);
 
-    this.express.use(cookieParser());
-    this.express.use(passport.initialize());
+    this.express.use(cookieParser() as any);
+    this.express.use(passport.initialize() as any);
     this.express.use(passport.session());
   }
 
@@ -65,7 +65,7 @@ class App {
       console.log(JSON.stringify(req.user));
       return next(); }
     console.log("user is not authenticated");
-    res.redirect('/');
+    res.redirect('/login');
   }
 
   private routes(): void {
@@ -148,7 +148,7 @@ class App {
 
     // Static files
     this.express.use('/images', express.static(__dirname + '/img'));
-    console.log("Serving static files from: " + __dirname + '/dist/job-fetchr');
+    // console.log("Serving static files from: " + __dirname + '/dist/job-fetchr');
     
     this.express.use('/', express.static(__dirname + '/dist/job-fetchr/browser'));
   }

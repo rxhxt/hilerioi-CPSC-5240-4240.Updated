@@ -1,0 +1,17 @@
+.auth-buttons .btn {
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.navbar .rounded-circle {
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  transition: border-color 0.3s ease;
+}
+
+.navbar .rounded-circle:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.navbar .text-light {
+  font-weight: 500;
+}

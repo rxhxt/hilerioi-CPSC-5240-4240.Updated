@@ -66,8 +66,8 @@ class GooglePassport {
         passport.deserializeUser((ssoID, done) => __awaiter(this, void 0, void 0, function* () {
             console.log("Deserializing user with ssoID:", ssoID);
             try {
-                const userModel = new UserModel_1.UserModel();
-                const user = yield userModel.model.findOne({ ssoID: ssoID });
+                // Use the existing userModel instance instead of creating a new one
+                const user = yield this.userModel.model.findOne({ ssoID: ssoID });
                 if (user) {
                     console.log("Deserialized user:", user);
                     done(null, user); // Pass the user object to req.user
