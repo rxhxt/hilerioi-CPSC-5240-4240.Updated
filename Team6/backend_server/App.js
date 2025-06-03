@@ -78,6 +78,28 @@ class App {
             console.log("Successfully authenticated user");
             res.redirect('/');
         });
+        // API routes
+        router.get('/api/v1/auth/status', (req, res) => {
+            if (req.isAuthenticated()) {
+                res.json({
+                    authenticated: true,
+                    user: req.user
+                });
+            }
+            else {
+                res.json({
+                    authenticated: false
+                });
+            }
+        });
+        router.post('/api/v1/auth/logout', (req, res) => {
+            req.logout((err) => {
+                if (err) {
+                    return res.status(500).json({ error: 'Logout failed' });
+                }
+                res.json({ success: true });
+            });
+        });
         // JobPost routes
         router.get('/api/v1/jobposts/unprotected', (req, res) => __awaiter(this, void 0, void 0, function* () {
             yield this.jobPostModel.retrieveAllJobPosts(res);
@@ -124,11 +146,16 @@ class App {
             const payload = req.body;
             yield this.appliedJobModel.createAppliedJob(res, payload);
         }));
+        // Apply the router with all API and auth routes FIRST
         this.express.use('/', router);
         // Static files
         this.express.use('/images', express.static(__dirname + '/img'));
-        // console.log("Serving static files from: " + __dirname + '/dist/job-fetchr');
         this.express.use('/', express.static(__dirname + '/dist/job-fetchr/browser'));
+        // Catch-all handler for Angular app - MUST BE LAST
+        // this.express.get('*', (req, res) => {
+        //   console.log('Serving Angular app for path:', req.path);
+        //   res.sendFile(__dirname + '/dist/job-fetchr/browser');
+        // });
     }
 }
 exports.App = App;

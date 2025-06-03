@@ -8,6 +8,17 @@ import * as cookieParser from 'cookie-parser';
 import { JobPostModel } from './model/JobPostModel';
 import { AppliedJobModel } from './model/AppliedJobModel';
 
+// Extend Express Request interface to include Passport methods
+declare global {
+  namespace Express {
+    interface Request {
+      isAuthenticated(): boolean;
+      logout(callback: (err: any) => void): void;
+      user?: any;
+    }
+  }
+}
+
 class App {
   public express: express.Application;
   public googlePassportObj: GooglePassportObj;
@@ -59,7 +70,7 @@ class App {
     this.express.use(passport.session());
   }
 
-  private validateAuth(req, res, next):void {
+  private validateAuth(req: express.Request, res: express.Response, next: express.NextFunction):void {
     if (req.isAuthenticated()) { 
       console.log("user is authenticated"); 
       console.log(JSON.stringify(req.user));
@@ -71,7 +82,6 @@ class App {
   private routes(): void {
     let router = express.Router();
 
-    
     // Authentication routes
     router.get('/login',
       passport.authenticate('google', { scope: ['profile', 'email'] })
@@ -85,6 +95,28 @@ class App {
       }
     );
 
+    // API routes
+    router.get('/api/v1/auth/status', (req, res) => {
+      if (req.isAuthenticated()) {
+        res.json({ 
+          authenticated: true, 
+          user: req.user 
+        });
+      } else {
+        res.json({ 
+          authenticated: false 
+        });
+      }
+    });
+
+    router.post('/api/v1/auth/logout', (req, res) => {
+      req.logout((err) => {
+        if (err) {
+          return res.status(500).json({ error: 'Logout failed' });
+        }
+        res.json({ success: true });
+      });
+    });
 
     // JobPost routes
     router.get('/api/v1/jobposts/unprotected', async (req, res) => {
@@ -144,13 +176,19 @@ class App {
       await this.appliedJobModel.createAppliedJob(res, payload);
     });
 
+    // Apply the router with all API and auth routes FIRST
     this.express.use('/', router);
 
     // Static files
     this.express.use('/images', express.static(__dirname + '/img'));
-    // console.log("Serving static files from: " + __dirname + '/dist/job-fetchr');
-    
     this.express.use('/', express.static(__dirname + '/dist/job-fetchr/browser'));
+
+    
+    // Catch-all handler for Angular app - MUST BE LAST
+    // this.express.get('*', (req, res) => {
+    //   console.log('Serving Angular app for path:', req.path);
+    //   res.sendFile(__dirname + '/dist/job-fetchr/browser');
+    // });
   }
 }
 

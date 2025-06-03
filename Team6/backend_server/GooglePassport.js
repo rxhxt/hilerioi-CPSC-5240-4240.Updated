@@ -11,7 +11,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const passport = require("passport");
 const UserModel_1 = require("./model/UserModel");
-//let GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 let GoogleStrategy = require('passport-google-oauth20-with-people-api').Strategy;
 // Creates a Passport configuration for Google
 class GooglePassport {
@@ -31,14 +30,26 @@ class GooglePassport {
         this.userModel = new UserModel_1.UserModel();
         this.clientId = process.env.OAUTH_ID;
         this.secretId = process.env.OAUTH_SECRET;
+        // Dynamic callback URL based on environment
+        const getCallbackURL = () => {
+            if (process.env.NODE_ENV === 'production') {
+                // For Azure, use the website URL from environment or construct it
+                const azureUrl = process.env.WEBSITE_HOSTNAME
+                    ? `https://${process.env.WEBSITE_HOSTNAME}`
+                    : process.env.AZURE_CALLBACK_BASE_URL || 'https://your-app.azurewebsites.net';
+                return `${azureUrl}/auth/google/callback`;
+            }
+            else {
+                return "http://localhost:8080/auth/google/callback";
+            }
+        };
         passport.use(new GoogleStrategy({
             clientID: this.clientId,
             clientSecret: this.secretId,
-            callbackURL: process.env.NODE_ENV === 'production'
-                ? "https://your-production-domain.com/auth/google/callback"
-                : "http://localhost:8080/auth/google/callback"
+            callbackURL: getCallbackURL()
         }, (accessToken, refreshToken, profile, done) => __awaiter(this, void 0, void 0, function* () {
             console.log("Inside Google strategy");
+            console.log("Callback URL being used:", getCallbackURL());
             try {
                 const user = yield this.userModel.findOrCreateUser(profile);
                 if (user) {
