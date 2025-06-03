@@ -15,13 +15,18 @@
     "mongoose": "^8.14.1",
     "debug": "^4.4.0",
     "ts-node": "^10.9.2",
-    "typescript": "^4.6.3"
+    "typescript": "^4.6.3",
+    "cookie-parser": "^1.4.7",
+    "express-session": "^1.18.1",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-google-oauth20-with-people-api": "^2.0.0"
   },
   "scripts": {
     "start": "node ./Team6/backend_server/AppServer.js",
     "build": "tsc -p ./Team6/backend_server",
     "build:frontend": "cd ./Team6/job-fetchr && npm install && npm run build",
-    "postinstall": "npm run build",
+    "postinstall": "cd ./Team6/backend_server && npm install && cd ../.. && npm run build",
     "start:frontend": "cd ./Team6/job-fetchr && ng serve"
   },
   "engines": {
