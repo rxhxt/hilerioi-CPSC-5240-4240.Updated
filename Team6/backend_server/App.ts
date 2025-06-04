@@ -2,6 +2,7 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as crypto from 'crypto';
 import * as passport from 'passport';
+import * as path from 'path'; 
 import GooglePassportObj from './GooglePassport';
 import * as session from 'express-session';
 import * as cookieParser from 'cookie-parser';
@@ -50,18 +51,40 @@ class App {
   private middleware(): void {
     this.express.use(bodyParser.json());
     this.express.use(bodyParser.urlencoded({ extended: false }));
-    this.express.use((req, res, next) => {// CORS
-      res.header("Access-Control-Allow-Origin", "*");
-      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-      next();
+    
+    // Updated CORS configuration for same-origin setup
+    this.express.use((req, res, next) => {
+      // Since frontend and backend are served from same origin, we need different CORS handling
+      const allowedOrigins = process.env.NODE_ENV === 'production' 
+        ? [process.env.AZURE_URL || 'https://your-azure-app.azurewebsites.net'] 
+        : ['http://localhost:8080']; // Same port as your backend
+    
+      const origin = req.headers.origin;
+      if (origin && allowedOrigins.includes(origin)) {
+        res.header('Access-Control-Allow-Origin', origin);
+      }
+      
+      res.header('Access-Control-Allow-Credentials', 'true');
+      res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+      res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+      
+      if (req.method === 'OPTIONS') {
+        res.sendStatus(200);
+      } else {
+        next();
+      }
     });
-    this.express.use(session({   // Session configuration
+
+    // Updated session configuration
+    this.express.use(session({
       secret: process.env.SESSION_SECRET || 'keyboard cat',
       resave: false,
       saveUninitialized: false,
       cookie: {
         secure: process.env.NODE_ENV === 'production',
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
       }
     }) as any);
 
@@ -97,6 +120,7 @@ class App {
 
     // API routes
     router.get('/api/v1/auth/status', (req, res) => {
+      console.log("Checking authentication status");
       if (req.isAuthenticated()) {
         res.json({ 
           authenticated: true, 

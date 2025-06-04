@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
 
 import { JobproxyService } from './service/jobproxy.service';
+import { AuthService } from './services/auth.service';  // Add this import
 import { WelcomepageComponent } from './pages/welcomepage/welcomepage.component';
 import { JoblistingsComponent } from './pages/joblistings/joblistings.component';
 import { JobdetailComponent } from './pages/jobdetail/jobdetail.component';
@@ -29,7 +30,7 @@ import { CommonModule } from '@angular/common';
     RouterModule, 
     FormsModule
   ],
-  providers: [JobproxyService],
+  providers: [JobproxyService, AuthService],  // Add AuthService here
   bootstrap: [AppComponent]
 })
 export class AppModule { }
