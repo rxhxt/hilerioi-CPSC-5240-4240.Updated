@@ -162,23 +162,23 @@
                   <div class="row">
                     <div class="col-md-8">
                       <h5 class="card-title mb-1 text-primary" style="cursor: pointer;" 
-                          (click)="viewJobDetails(appliedJob.jobPostId)">
-                        {{ getJobDetails(appliedJob.jobPostId)?.position_title || 'Position Title Unavailable' }}
+                          (click)="viewJobDetails(appliedJob)">
+                        {{ getJobDetails(appliedJob.job_id)?.position_title || 'Position Title Unavailable' }}
                       </h5>
                       <p class="text-muted mb-2">
                         <i class="bi bi-building me-1"></i>
-                        {{ getJobDetails(appliedJob.jobPostId)?.company || 'Company Unavailable' }}
+                        {{ getJobDetails(appliedJob.job_id)?.company || 'Company Unavailable' }}
                       </p>
                       <ul class="list-inline small text-muted mb-0">
                         <li class="list-inline-item me-3">
                           <i class="bi bi-geo-alt"></i> 
-                          {{ getJobDetails(appliedJob.jobPostId)?.location || 'Location Unavailable' }}
+                          {{ getJobDetails(appliedJob.job_id)?.location || 'Location Unavailable' }}
                         </li>
-                        <li class="list-inline-item me-3" *ngIf="getJobDetails(appliedJob.jobPostId)?.salary">
+                        <li class="list-inline-item me-3" *ngIf="getJobDetails(appliedJob.job_id)?.salary">
                           <i class="bi bi-currency-dollar"></i> 
-                          ${{ getJobDetails(appliedJob.jobPostId)?.salary | number }}
+                          ${{ getJobDetails(appliedJob.job_id)?.salary | number }}
                         </li>
-                        <li class="list-inline-item me-3" *ngIf="getJobDetails(appliedJob.jobPostId)?.is_remote">
+                        <li class="list-inline-item me-3" *ngIf="getJobDetails(appliedJob.job_id)?.is_remote">
                           <i class="bi bi-laptop"></i> Remote
                         </li>
                       </ul>
@@ -195,11 +195,11 @@
                       </div>
                       <p class="small text-muted mb-1">
                         <i class="bi bi-calendar me-1"></i>
-                        Applied: {{ formatDate(appliedJob.dateApplied) }}
+                        Applied: {{ formatDate(appliedJob.applied_date) }}
                       </p>
-                      <p class="small text-muted mb-0" *ngIf="getJobDetails(appliedJob.jobPostId)?.date_posted">
+                      <p class="small text-muted mb-0" *ngIf="getJobDetails(appliedJob.job_id)?.date_posted">
                         <i class="bi bi-clock me-1"></i>
-                        Posted: {{ formatDate(getJobDetails(appliedJob.jobPostId)!.date_posted) }}
+                        Posted: {{ formatDate(getJobDetails(appliedJob.job_id)!.date_posted) }}
                       </p>
                     </div>
                   </div>
@@ -209,12 +209,12 @@
                     <div class="col">
                       <div class="btn-group btn-group-sm" role="group">
                         <button type="button" class="btn btn-outline-primary" 
-                                (click)="viewJobDetails(appliedJob.jobPostId)">
+                                (click)="viewJobDetails(appliedJob)">
                           <i class="bi bi-eye me-1"></i>View Job
                         </button>
                         <button type="button" class="btn btn-outline-secondary" 
-                                *ngIf="getJobDetails(appliedJob.jobPostId)?.url"
-                                (click)="openOriginalPost(getJobDetails(appliedJob.jobPostId)!.url)">
+                                *ngIf="getJobDetails(appliedJob.job_id)?.url"
+                                (click)="openOriginalPost(getJobDetails(appliedJob.job_id)!.url)">
                           <i class="bi bi-link-45deg me-1"></i>Original Post
                         </button>
                         <button type="button" class="btn btn-outline-info" 

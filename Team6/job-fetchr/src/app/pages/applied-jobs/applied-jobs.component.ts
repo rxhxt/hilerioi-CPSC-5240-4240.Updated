@@ -36,7 +36,11 @@ export class AppliedJobsComponent implements OnInit {
         this.loadJobPostDetails();
       },
       error: (error) => {
-        this.errorMessage = 'Failed to load applied jobs. Please try again later.';
+        if (error.status === 401) {
+          this.errorMessage = 'Please log in to view your applied jobs.';
+        } else {
+          this.errorMessage = 'Failed to load applied jobs. Please try again later.';
+        }
         this.loading = false;
         console.error('Error fetching applied jobs:', error);
       }
@@ -49,7 +53,6 @@ export class AppliedJobsComponent implements OnInit {
         this.jobPosts = jobPostsData;
         this.applyFiltersAndSort();
         this.loading = false;
-        console.log('Applied jobs loaded:', this.appliedJobs);
       },
       error: (error) => {
         this.errorMessage = 'Failed to load job details. Please try again later.';
@@ -83,7 +86,6 @@ export class AppliedJobsComponent implements OnInit {
   }
 
   searchJobs(): void {
-    console.log('Searching applied jobs for:', this.searchTerm);
     this.applyFiltersAndSort();
   }
 
@@ -100,7 +102,7 @@ export class AppliedJobsComponent implements OnInit {
 
     const term = this.searchTerm.toLowerCase();
     this.filteredAppliedJobs = this.appliedJobs.filter(appliedJob => {
-      const jobDetails = this.getJobDetails(appliedJob.jobPostId);
+      const jobDetails = this.getJobDetails(appliedJob.job_id);
       return (
         jobDetails?.position_title?.toLowerCase().includes(term) ||
         jobDetails?.company?.toLowerCase().includes(term) ||
@@ -116,12 +118,12 @@ export class AppliedJobsComponent implements OnInit {
     switch (this.sortOption) {
       case 'newest':
         this.filteredAppliedJobs.sort((a, b) => 
-          new Date(b.dateApplied).getTime() - new Date(a.dateApplied).getTime()
+          new Date(b.applied_date).getTime() - new Date(a.applied_date).getTime()
         );
         break;
       case 'oldest':
         this.filteredAppliedJobs.sort((a, b) => 
-          new Date(a.dateApplied).getTime() - new Date(b.dateApplied).getTime()
+          new Date(a.applied_date).getTime() - new Date(b.applied_date).getTime()
         );
         break;
       case 'status':
@@ -131,8 +133,8 @@ export class AppliedJobsComponent implements OnInit {
         break;
       case 'company':
         this.filteredAppliedJobs.sort((a, b) => {
-          const jobA = this.getJobDetails(a.jobPostId);
-          const jobB = this.getJobDetails(b.jobPostId);
+          const jobA = this.getJobDetails(a.job_id);
+          const jobB = this.getJobDetails(b.job_id);
           return (jobA?.company || '').localeCompare(jobB?.company || '');
         });
         break;
@@ -143,12 +145,11 @@ export class AppliedJobsComponent implements OnInit {
     return this.filteredAppliedJobs;
   }
 
-  viewJobDetails(jobPostId: string): void {
-    if (jobPostId) {
-      console.log('Navigating to job details for ID:', jobPostId);
-      this.router.navigate(['/job', jobPostId]);
+  viewJobDetails(appliedJob: AppliedJob): void {
+    if (appliedJob.job_id) {
+      this.router.navigate(['/job', appliedJob.job_id]);
     } else {
-      console.error('Cannot navigate to job details: missing job ID');
+      console.error('missing job ID');
     }
   }
 
@@ -200,5 +201,9 @@ export class AppliedJobsComponent implements OnInit {
   clearSearch(): void {
     this.searchTerm = '';
     this.applyFiltersAndSort();
+  }
+
+  refreshAppliedJobs(): void {
+    this.loadAppliedJobs();
   }
 }

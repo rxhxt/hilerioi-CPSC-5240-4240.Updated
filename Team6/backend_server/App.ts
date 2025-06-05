@@ -172,32 +172,33 @@ class App {
     });
 
     // AppliedJob routes
-    router.get('/api/v1/appliedjobs/unprotected', async (req, res) => {
-      await this.appliedJobModel.retrieveAllAppliedJobs(res);
-    });
-
-    router.get('/api/v1/appliedjobs/unprotected/:appliedJobId', async (req, res) => {
-      const id = req.params.appliedJobId;
-      await this.appliedJobModel.retrieveAppliedJobById(res, id);
-    });
-
-    router.post('/api/v1/appliedjobs/unprotected', async (req, res) => {
-      const payload = req.body;
-      await this.appliedJobModel.createAppliedJob(res, payload);
-    });
-
     router.get('/api/v1/appliedjobs', this.validateAuth, async (req, res) => {
-      await this.appliedJobModel.retrieveAllAppliedJobs(res);
+      const userId = req.user?.ssoID; // Get user ID from authenticated user
+      if (!userId) {
+        res.status(401).json({ error: "User not authenticated" });
+        return;
+      }
+      await this.appliedJobModel.retrieveAllAppliedJobs(res, userId);
     });
 
     router.get('/api/v1/appliedjobs/:appliedJobId', this.validateAuth, async (req, res) => {
       const id = req.params.appliedJobId;
-      await this.appliedJobModel.retrieveAppliedJobById(res, id);
+      const userId = req.user?.ssoID;
+      if (!userId) {
+        res.status(401).json({ error: "User not authenticated" });
+        return;
+      }
+      await this.appliedJobModel.retrieveAppliedJobById(res, id, userId);
     });
 
     router.post('/api/v1/appliedjobs', this.validateAuth, async (req, res) => {
       const payload = req.body;
-      await this.appliedJobModel.createAppliedJob(res, payload);
+      const userId = req.user?.ssoID;
+      if (!userId) {
+        res.status(401).json({ error: "User not authenticated" });
+        return;
+      }
+      await this.appliedJobModel.createAppliedJob(res, payload, userId);
     });
 
     // Apply the router with all API and auth routes FIRST

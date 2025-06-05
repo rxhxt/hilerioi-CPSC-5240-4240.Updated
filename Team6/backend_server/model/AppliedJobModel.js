@@ -26,8 +26,8 @@ class AppliedJobModel {
                 required: true,
                 index: true
             },
-            user_id: String,
-            job_id: String,
+            user_id: { type: String, required: true },
+            job_id: { type: String, required: true },
             applied_date: Date,
             status: String
         }, { collection: 'appliedjobs' });
@@ -43,43 +43,76 @@ class AppliedJobModel {
             }
         });
     }
-    retrieveAllAppliedJobs(response) {
+    retrieveAllAppliedJobs(response, userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('Retrieving all applied jobs');
-            const query = this.model.find({});
+            console.log('Retrieving all applied jobs for user:', userId);
             try {
+                let query;
+                if (userId) {
+                    // Filter by user ID if provided
+                    query = this.model.find({ user_id: userId });
+                }
+                else {
+                    // Fallback to all jobs (for unprotected routes)
+                    query = this.model.find({});
+                }
                 const appliedJobArray = yield query.exec();
                 response.json(appliedJobArray);
             }
             catch (e) {
-                console.error(e);
+                console.error('Error retrieving applied jobs:', e);
+                response.status(500).json({ error: 'Failed to retrieve applied jobs' });
             }
         });
     }
-    retrieveAppliedJobById(response, appliedJobId) {
+    retrieveAppliedJobById(response, appliedJobId, userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('Retrieving applied job with id: ' + appliedJobId);
-            const query = this.model.findOne({ appliedJobId: appliedJobId });
+            console.log('Retrieving applied job with id:', appliedJobId, 'for user:', userId);
             try {
+                let query;
+                if (userId) {
+                    // Filter by both job ID and user ID
+                    query = this.model.findOne({
+                        appliedJobId: appliedJobId,
+                        user_id: userId
+                    });
+                }
+                else {
+                    // Fallback for unprotected routes
+                    query = this.model.findOne({ appliedJobId: appliedJobId });
+                }
                 const appliedJob = yield query.exec();
+                if (!appliedJob) {
+                    return response.status(404).json({ error: "Applied job not found" });
+                }
                 response.json(appliedJob);
             }
             catch (e) {
-                console.error(e);
+                console.error('Error retrieving applied job:', e);
+                response.status(500).json({ error: 'Failed to retrieve applied job' });
             }
         });
     }
-    createAppliedJob(response, appliedJob) {
+    createAppliedJob(response, appliedJob, userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('Creating applied job: ' + JSON.stringify(appliedJob));
+            console.log('Creating applied job:', JSON.stringify(appliedJob), 'for user:', userId);
             try {
                 appliedJob.appliedJobId = crypto.randomBytes(16).toString('hex');
+                // Set user ID if provided (from authenticated user)
+                if (userId) {
+                    appliedJob.user_id = userId;
+                }
+                // Set applied date if not provided
+                if (!appliedJob.applied_date) {
+                    appliedJob.applied_date = new Date();
+                }
                 const newAppliedJob = new this.model(appliedJob);
                 const result = yield newAppliedJob.save();
                 response.json(result);
             }
             catch (e) {
-                console.error(e);
+                console.error('Error creating applied job:', e);
+                response.status(500).json({ error: 'Failed to create applied job' });
             }
         });
     }

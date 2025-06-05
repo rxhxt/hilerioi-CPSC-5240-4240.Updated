@@ -23,9 +23,10 @@ export interface JobPost {
 
 export interface AppliedJob {
   _id?: string;
-  jobPostId: string;
-  userId: string;
-  dateApplied: Date;
+  appliedJobId: string;
+  user_id: string;
+  job_id: string;
+  applied_date: Date;
   status: string;
   resume?: string;
   coverLetter?: string;

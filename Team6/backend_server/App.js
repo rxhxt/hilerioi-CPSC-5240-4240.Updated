@@ -143,27 +143,34 @@ class App {
             yield this.jobPostModel.CreateJobPost(res, jobPostData);
         }));
         // AppliedJob routes
-        router.get('/api/v1/appliedjobs/unprotected', (req, res) => __awaiter(this, void 0, void 0, function* () {
-            yield this.appliedJobModel.retrieveAllAppliedJobs(res);
-        }));
-        router.get('/api/v1/appliedjobs/unprotected/:appliedJobId', (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const id = req.params.appliedJobId;
-            yield this.appliedJobModel.retrieveAppliedJobById(res, id);
-        }));
-        router.post('/api/v1/appliedjobs/unprotected', (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const payload = req.body;
-            yield this.appliedJobModel.createAppliedJob(res, payload);
-        }));
         router.get('/api/v1/appliedjobs', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
-            yield this.appliedJobModel.retrieveAllAppliedJobs(res);
+            var _a;
+            const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.ssoID; // Get user ID from authenticated user
+            if (!userId) {
+                res.status(401).json({ error: "User not authenticated" });
+                return;
+            }
+            yield this.appliedJobModel.retrieveAllAppliedJobs(res, userId);
         }));
         router.get('/api/v1/appliedjobs/:appliedJobId', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
+            var _b;
             const id = req.params.appliedJobId;
-            yield this.appliedJobModel.retrieveAppliedJobById(res, id);
+            const userId = (_b = req.user) === null || _b === void 0 ? void 0 : _b.ssoID;
+            if (!userId) {
+                res.status(401).json({ error: "User not authenticated" });
+                return;
+            }
+            yield this.appliedJobModel.retrieveAppliedJobById(res, id, userId);
         }));
         router.post('/api/v1/appliedjobs', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
+            var _c;
             const payload = req.body;
-            yield this.appliedJobModel.createAppliedJob(res, payload);
+            const userId = (_c = req.user) === null || _c === void 0 ? void 0 : _c.ssoID;
+            if (!userId) {
+                res.status(401).json({ error: "User not authenticated" });
+                return;
+            }
+            yield this.appliedJobModel.createAppliedJob(res, payload, userId);
         }));
         // Apply the router with all API and auth routes FIRST
         this.express.use('/', router);

@@ -23,8 +23,8 @@ class AppliedJobModel {
                     required: true,
                     index: true
                 },
-                user_id: String,
-                job_id: String,
+                user_id: { type: String, required: true },
+                job_id: { type: String, required: true },
                 applied_date: Date,
                 status: String
             }, { collection: 'appliedjobs' }
@@ -41,40 +41,79 @@ class AppliedJobModel {
         }
     }
 
-    public async retrieveAllAppliedJobs(response: any) {
-        console.log('Retrieving all applied jobs');
-        const query = this.model.find({});
+    public async retrieveAllAppliedJobs(response: any, userId?: string) {
+        console.log('Retrieving all applied jobs for user:', userId);
+        
         try {
+            let query;
+            if (userId) {
+                //filter by user ID (ssoID)
+                query = this.model.find({ user_id: userId });
+            } else {
+                //if not authenticated, return none
+                query = this.model.find({ user_id: null });
+            }
+            
             const appliedJobArray = await query.exec();
             response.json(appliedJobArray);
-        }
-        catch (e) {
-            console.error(e);
+        } catch (e) {
+            response.status(500).json({ error: 'Failed to retrieve applied jobs' });
         }
     }
 
-    public async retrieveAppliedJobById(response: any, appliedJobId: string) {
-        console.log('Retrieving applied job with id: ' + appliedJobId);
-        const query = this.model.findOne({ appliedJobId: appliedJobId });
+    public async retrieveAppliedJobById(response: any, appliedJobId: string, userId?: string) {
+        console.log('Retrieving applied job with id:', appliedJobId, 'for user:', userId);
+        
         try {
+            let query;
+            if (userId) {
+                // find jobs that match both appliedJobId and userId
+                query = this.model.findOne({ 
+                    appliedJobId: appliedJobId, 
+                    user_id: userId 
+                });
+            } else {
+                // if not authenticated, return none
+                query = this.model.findOne({ 
+                    appliedJobId: appliedJobId, 
+                    user_id: null 
+                });
+            }
+            
             const appliedJob = await query.exec();
+            if (!appliedJob) {
+                return response.status(404).json({ error: "Applied job not found" });
+            }
             response.json(appliedJob);
-        }
-        catch (e) {
-            console.error(e);
+        } catch (e) {
+            response.status(500).json({ error: 'Failed to retrieve applied job' });
         }
     }
 
-    public async createAppliedJob(response: any, appliedJob: any) {
-        console.log('Creating applied job: ' + JSON.stringify(appliedJob));
+    public async createAppliedJob(response: any, appliedJob: any, userId?: string) {
+        console.log('Creating applied job:', JSON.stringify(appliedJob), 'for user:', userId);
+        
         try {
             appliedJob.appliedJobId = crypto.randomBytes(16).toString('hex');
+            
+            if (userId) {
+                appliedJob.user_id = userId;
+            }
+            else{
+                // If userId is not provided, dont do anything
+                appliedJob.user_id = null;
+            }
+            
+            // Set applied date if not provided
+            if (!appliedJob.applied_date) {
+                appliedJob.applied_date = new Date();
+            }
+            
             const newAppliedJob = new this.model(appliedJob);
             const result = await newAppliedJob.save();
             response.json(result);
-        }
-        catch (e) {
-            console.error(e);
+        } catch (e) {
+            response.status(500).json({ error: 'Failed to create applied job' });
         }
     }
 }
