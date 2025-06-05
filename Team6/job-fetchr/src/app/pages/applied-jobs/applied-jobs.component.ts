@@ -30,11 +30,9 @@ export class AppliedJobsComponent implements OnInit {
     this.loading = true;
     this.errorMessage = '';
     
-    // Load both applied jobs and job posts to get complete information
     this.jobproxyService.getAllAppliedJobs().subscribe({
       next: (appliedJobsData) => {
         this.appliedJobs = appliedJobsData;
-        // Load job posts to get job details
         this.loadJobPostDetails();
       },
       error: (error) => {
@@ -63,6 +61,25 @@ export class AppliedJobsComponent implements OnInit {
 
   getJobDetails(jobPostId: string): JobPost | null {
     return this.jobPosts.find(job => job.jobPostId === jobPostId) || null;
+  }
+
+  // Statistics calculation methods
+  getTotalApplications(): number {
+    return this.appliedJobs.length;
+  }
+
+  getPendingApplications(): number {
+    return this.appliedJobs.filter(job => job.status?.toLowerCase() === 'pending').length;
+  }
+
+  getInterviewApplications(): number {
+    return this.appliedJobs.filter(job => job.status?.toLowerCase() === 'interview').length;
+  }
+
+  getAcceptedApplications(): number {
+    return this.appliedJobs.filter(job => 
+      job.status?.toLowerCase() === 'accepted' || job.status?.toLowerCase() === 'hired'
+    ).length;
   }
 
   searchJobs(): void {
@@ -135,6 +152,12 @@ export class AppliedJobsComponent implements OnInit {
     }
   }
 
+  openOriginalPost(url: string): void {
+    if (url) {
+      window.open(url, '_blank');
+    }
+  }
+
   formatDate(date: Date | string): string {
     if (!date) return 'N/A';
     return new Date(date).toLocaleDateString();
@@ -172,5 +195,10 @@ export class AppliedJobsComponent implements OnInit {
       default:
         return 'bi-question-circle';
     }
+  }
+
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.applyFiltersAndSort();
   }
 }
