@@ -36,7 +36,7 @@ class GooglePassport {
                 // For Azure, use the website URL from environment or construct it
                 const azureUrl = process.env.WEBSITE_HOSTNAME
                     ? `https://${process.env.WEBSITE_HOSTNAME}`
-                    : process.env.AZURE_CALLBACK_BASE_URL || 'https://your-app.azurewebsites.net';
+                    : process.env.AZURE_CALLBACK_BASE_URL || 'https://job-fetchr-hee6aedmcmhrgvbu.westus-01.azurewebsites.net';
                 return `${azureUrl}/auth/google/callback`;
             }
             else {

@@ -14,13 +14,15 @@ import { WelcomepageComponent } from './pages/welcomepage/welcomepage.component'
 import { JoblistingsComponent } from './pages/joblistings/joblistings.component';
 import { JobdetailComponent } from './pages/jobdetail/jobdetail.component';
 import { CommonModule } from '@angular/common';
+import { AppliedJobsComponent } from './pages/applied-jobs/applied-jobs.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     WelcomepageComponent,
     JoblistingsComponent,
-    JobdetailComponent
+    JobdetailComponent,
+    AppliedJobsComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +32,7 @@ import { CommonModule } from '@angular/common';
     RouterModule, 
     FormsModule
   ],
-  providers: [JobproxyService, AuthService],  // Add AuthService here
+  providers: [JobproxyService, AuthService],  
   bootstrap: [AppComponent]
 })
 export class AppModule { }
