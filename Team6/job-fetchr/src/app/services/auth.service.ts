@@ -7,6 +7,7 @@ export interface AuthStatus {
   authenticated: boolean;
   user?: {
     id?: string;
+    ssoID?: string;
     displayName?: string;
     photo?: string;
     email?: string;

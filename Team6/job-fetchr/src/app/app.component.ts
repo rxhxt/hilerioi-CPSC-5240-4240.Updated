@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AuthService, AuthStatus } from './services/auth.service';
+import { AuthService, AuthStatus } from './service/AuthService';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  standalone: false,
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  standalone: false
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'job-fetchr';
@@ -20,7 +20,12 @@ export class AppComponent implements OnInit, OnDestroy {
     this.authSubscription = this.authService.authStatus$.subscribe(
       status => {
         this.authStatus = status;
-        console.log('Auth status updated in component:', status);
+        console.log('Auth status updated:', status);
+        
+        if (status.authenticated && status.user) {
+          console.log('Display Name:', status.user.displayName);
+          console.log('Email:', status.user.email);
+        }
       }
     );
   }

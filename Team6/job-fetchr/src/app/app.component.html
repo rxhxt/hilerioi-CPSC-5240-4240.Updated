@@ -18,37 +18,78 @@
         <li class="nav-item"><a routerLink="/applied-jobs" routerLinkActive="active" class="nav-link"><i class="bi bi-check-circle me-1"></i>Applied Jobs</a></li>
       </ul>
       
-      <!-- Authentication section -->
       <div class="d-flex align-items-center">
-        <!-- Login button for unauthenticated users -->
         <div *ngIf="!authStatus.authenticated" class="auth-buttons">
           <button class="btn btn-outline-light me-2" (click)="login()">
             <i class="bi bi-box-arrow-in-right me-1"></i>Login with Google
           </button>
         </div>
         
-        <!-- User info for authenticated users -->
-        <div *ngIf="authStatus.authenticated" class="d-flex align-items-center">
-          <!-- User profile picture -->
-          <img *ngIf="authStatus.user?.photo" 
-               [src]="authStatus.user?.photo" 
-               alt="Profile" 
-               class="rounded-circle me-2" 
-               width="32" 
-               height="32">
-          
-          <!-- Fallback icon if no photo -->
-          <i *ngIf="!authStatus.user?.photo" class="bi bi-person-circle text-light fs-4 me-2"></i>
-          
-          <!-- Welcome message -->
-          <span class="text-light me-3">
-            Welcome, {{ authStatus.user?.displayName || 'User' }}!
-          </span>
-          
-          <!-- Logout button -->
-          <button class="btn btn-outline-light btn-sm" (click)="logout()">
-            <i class="bi bi-box-arrow-right me-1"></i>Logout
-          </button>
+        <div *ngIf="authStatus.authenticated" class="navbar-nav ms-auto">
+
+          <div *ngIf="authStatus.authenticated && authStatus.user" class="d-flex align-items-center">
+
+            <img *ngIf="authStatus.user.photo" 
+                 [src]="authStatus.user.photo" 
+                 alt="Profile" 
+                 class="rounded-circle me-3" 
+                 width="32" 
+                 height="32">
+            
+
+            <i *ngIf="!authStatus.user.photo" class="bi bi-person-circle text-light fs-4 me-3"></i>
+            
+
+            <div class="dropdown">
+              <button class="btn btn-outline-light dropdown-toggle d-flex align-items-center" 
+                      type="button" 
+                      id="userDropdown" 
+                      data-bs-toggle="dropdown" 
+                      aria-expanded="false">
+                <span class="me-2">Hello, {{ authStatus.user.displayName }}</span>
+              </button>
+              
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                <li>
+                  <h6 class="dropdown-header">
+                    <i class="bi bi-person-fill me-2"></i>{{ authStatus.user.displayName }}
+                  </h6>
+                </li>
+                
+                <!-- Display Name -->
+                <li>
+                  <div class="dropdown-item-text">
+                    <small class="text-muted">Name:</small><br>
+                    <strong class="text-primary">{{ authStatus.user.displayName }}</strong>
+                  </div>
+                </li>
+                
+                <!-- Email -->
+                <li>
+                  <div class="dropdown-item-text">
+                    <small class="text-muted">Email:</small><br>
+                    <strong class="text-success">{{ authStatus.user.email }}</strong>
+                  </div>
+                </li>
+                
+                <!-- SSO ID -->
+                <li>
+                  <div class="dropdown-item-text">
+                    <small class="text-muted">User ID (SSO):</small><br>
+                    <small class="font-monospace text-info">{{ authStatus.user.ssoID }}</small>
+                  </div>
+                </li>
+                
+                <li><hr class="dropdown-divider"></li>
+                
+                <li>
+                  <button class="dropdown-item text-danger" (click)="logout()">
+                    <i class="bi bi-box-arrow-right me-2"></i>Logout
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>
