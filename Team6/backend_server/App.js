@@ -78,8 +78,7 @@ class App {
                 maxAge: 24 * 60 * 60 * 1000,
                 sameSite: process.env.NODE_ENV === 'production' ? 'lax' : 'lax',
                 domain: process.env.NODE_ENV === 'production'
-                    ? process.env.WEBSITE_HOSTNAME || '.azurewebsites.net'
-                    : undefined
+                    ? undefined : undefined
             }
         }));
         this.express.use(cookieParser());

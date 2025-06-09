@@ -91,8 +91,7 @@ class App {
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
         sameSite: process.env.NODE_ENV === 'production' ? 'lax' : 'lax', // Changed from 'none' to 'lax'
         domain: process.env.NODE_ENV === 'production' 
-          ? process.env.WEBSITE_HOSTNAME || '.azurewebsites.net'
-          : undefined
+          ? undefined : undefined
       }
     }) as any);
 
