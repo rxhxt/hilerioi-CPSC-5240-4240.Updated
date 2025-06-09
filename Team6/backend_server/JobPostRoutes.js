@@ -33,6 +33,12 @@ class JobPostRoutes {
             const jobPostData = req.body;
             yield this.jobPostModel.CreateJobPost(res, jobPostData);
         }));
+        // Delete job post
+        this.router.delete('/api/v1/jobposts/unprotected/:jobPostId', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const jobPostId = req.params.jobPostId;
+            console.log('DELETE request received for jobPostId:', jobPostId);
+            yield this.jobPostModel.deleteJobPost(res, jobPostId);
+        }));
         // -------------------Validated Routes below-------------------
         // Get all job posts
         this.router.get('/api/v1/jobposts', this.validateAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {

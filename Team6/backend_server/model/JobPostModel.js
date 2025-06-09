@@ -77,6 +77,40 @@ class JobPostModel {
             }
         });
     }
+    deleteJobPost(response, jobPostId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log('Deleting job post with id: ' + jobPostId);
+            try {
+                // Try deleting by jobPostId first
+                let result = yield this.model.deleteOne({ jobPostId: jobPostId });
+                // If that didn't work, try by _id
+                if (result.deletedCount === 0) {
+                    console.log('Trying to delete by _id instead...');
+                    result = yield this.model.deleteOne({ _id: jobPostId });
+                }
+                if (result.deletedCount === 0) {
+                    response.status(404).json({
+                        error: 'Job post not found',
+                        jobPostId: jobPostId
+                    });
+                }
+                else {
+                    response.json({
+                        message: 'Job post deleted successfully',
+                        deletedCount: result.deletedCount,
+                        jobPostId: jobPostId
+                    });
+                }
+            }
+            catch (e) {
+                console.error('Error deleting job post:', e);
+                response.status(500).json({
+                    error: 'Failed to delete job post',
+                    details: e.message
+                });
+            }
+        });
+    }
     CreateJobPost(response, data) {
         return __awaiter(this, void 0, void 0, function* () {
             console.log('Creating job post with data: ' + JSON.stringify(data));

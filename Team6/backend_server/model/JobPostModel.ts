@@ -72,6 +72,39 @@ class JobPostModel {
         }
     }
 
+    public async deleteJobPost(response: any, jobPostId: string) {
+        console.log('Deleting job post with id: ' + jobPostId);
+        try {
+            // Try deleting by jobPostId first
+            let result = await this.model.deleteOne({ jobPostId: jobPostId });
+            
+            // If that didn't work, try by _id
+            if (result.deletedCount === 0) {
+                console.log('Trying to delete by _id instead...');
+                result = await this.model.deleteOne({ _id: jobPostId });
+            }
+            
+            if (result.deletedCount === 0) {
+                response.status(404).json({ 
+                    error: 'Job post not found',
+                    jobPostId: jobPostId 
+                });
+            } else {
+                response.json({ 
+                    message: 'Job post deleted successfully', 
+                    deletedCount: result.deletedCount,
+                    jobPostId: jobPostId 
+                });
+            }
+        } catch (e) {
+            console.error('Error deleting job post:', e);
+            response.status(500).json({ 
+                error: 'Failed to delete job post',
+                details: e.message 
+            });
+        }
+    }
+
     public async CreateJobPost(response:any, data:any) {
         console.log('Creating job post with data: ' + JSON.stringify(data));
         try {

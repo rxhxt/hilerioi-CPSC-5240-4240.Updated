@@ -69,22 +69,6 @@ class App {
     this.express.use(passport.session());
   }
 
-
-
-  //       private middleware(): void {
-  //   this.expressApp.use(bodyParser.json());
-  //   this.expressApp.use(bodyParser.urlencoded({ extended: false }));
-  //   this.expressApp.use( (req, res, next) => {
-  //     res.header("Access-Control-Allow-Origin", "*");
-  //     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  //     next();
-  //   });
-  //   this.expressApp.use(session({ secret: 'keyboard cat' }));
-  //   this.expressApp.use(cookieParser());
-  //   this.expressApp.use(passport.initialize());
-  //   this.expressApp.use(passport.session());
-  // }
-
   private validateAuth(req: express.Request, res: express.Response, next: express.NextFunction):void {
     if (req.isAuthenticated()) { 
       console.log("user is authenticated"); 
@@ -149,6 +133,12 @@ class App {
       const jobPostData = req.body;
       await this.jobPostModel.CreateJobPost(res, jobPostData);
     });
+    router.delete('/api/v1/jobposts/unprotected/:jobPostId', async (req, res) => {
+  const jobPostId = req.params.jobPostId;
+  console.log('DELETE request received for jobPostId:', jobPostId);
+  await this.jobPostModel.deleteJobPost(res, jobPostId);
+});
+
 
     router.get('/api/v1/jobposts', this.validateAuth, async (req, res) => {
       await this.jobPostModel.retrieveAllJobPosts(res);
