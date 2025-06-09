@@ -16,7 +16,7 @@ describe('Test Jobpost Detail results', function () {
     var response;
 
     before(function (done) {
-        chai.request("http://localhost:8080")
+        chai.request("https://job-fetchr-hee6aedmcmhrgvbu.westus-01.azurewebsites.net/")
             .get("/api/v1/jobposts/unprotected")
             .end(function (err, res) {
                 expect(err).to.be.null;
@@ -25,13 +25,13 @@ describe('Test Jobpost Detail results', function () {
                 expect(res.body.length).to.be.greaterThan(0);
                 
                 jobId = res.body[0].jobPostId;
-                console.log(jobId);
+                console.log("Currently using jobId: "+ jobId);
                 done();
             });
     });
 
     before(function (done) {
-        chai.request("http://localhost:8080")
+        chai.request("https://job-fetchr-hee6aedmcmhrgvbu.westus-01.azurewebsites.net/")
             .get("/api/v1/jobposts/unprotected/" + jobId)
             .end(function (err, res) {
                 requestResult = res.body;

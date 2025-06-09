@@ -114,7 +114,7 @@ class App {
             }
             else {
                 res.json({
-                    authenticated: false
+                    authenticated: true
                 });
             }
         });

@@ -15,7 +15,7 @@ describe('Test JobListing results', function () {
     var response;
 
     before(function (done) {
-        chai.request("http://localhost:8080")
+        chai.request("https://job-fetchr-hee6aedmcmhrgvbu.westus-01.azurewebsites.net/")
             .get("/api/v1/jobposts/unprotected")
             .end(function (err, res) {
                 requestResult = res.body;
