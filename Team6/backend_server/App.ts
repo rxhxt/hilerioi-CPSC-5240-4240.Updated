@@ -89,7 +89,7 @@ class App {
         secure: process.env.NODE_ENV === 'production', // Use HTTPS in production
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
-        sameSite: process.env.NODE_ENV === 'production' ? 'lax' : 'lax', // Changed from 'none' to 'lax'
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // Changed from 'none' to 'lax'
         domain: process.env.NODE_ENV === 'production' 
           ? undefined : undefined
       }
@@ -106,6 +106,7 @@ class App {
       console.log(JSON.stringify(req.user));
       return next(); }
     console.log("user is not authenticated");
+    console.log(JSON.stringify(req));
     res.redirect('/login');
   }
 
