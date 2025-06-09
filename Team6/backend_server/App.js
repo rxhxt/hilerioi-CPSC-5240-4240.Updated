@@ -47,15 +47,16 @@ class App {
         this.express.use((req, res, next) => {
             const allowedOrigins = process.env.NODE_ENV === 'production'
                 ? [
-                    process.env.WEBSITE_HOSTNAME ? `https://${process.env.WEBSITE_HOSTNAME}` : '',
-                    'https://job-fetchr-hee6aedmcmhrgvbu.westus-01.azurewebsites.net',
-                    process.env.AZURE_CALLBACK_BASE_URL || ''
-                ].filter(Boolean)
+                    'https://job-fetchr-hee6aedmcmhrgvbu.westus-01.azurewebsites.net'
+                ]
                 : ['http://localhost:8080'];
             const origin = req.headers.origin;
-            // For same-origin requests (when frontend is served from same domain), allow without origin check
-            if (!origin || allowedOrigins.includes(origin)) {
-                res.header('Access-Control-Allow-Origin', origin || '*');
+            // For same-origin requests (Azure serves both frontend and backend), allow without origin
+            if (!origin) {
+                res.header('Access-Control-Allow-Origin', '*');
+            }
+            else if (allowedOrigins.includes(origin)) {
+                res.header('Access-Control-Allow-Origin', origin);
             }
             res.header('Access-Control-Allow-Credentials', 'true');
             res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
@@ -67,6 +68,19 @@ class App {
                 next();
             }
         });
+        //       private middleware(): void {
+        //   this.expressApp.use(bodyParser.json());
+        //   this.expressApp.use(bodyParser.urlencoded({ extended: false }));
+        //   this.expressApp.use( (req, res, next) => {
+        //     res.header("Access-Control-Allow-Origin", "*");
+        //     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        //     next();
+        //   });
+        //   this.expressApp.use(session({ secret: 'keyboard cat' }));
+        //   this.expressApp.use(cookieParser());
+        //   this.expressApp.use(passport.initialize());
+        //   this.expressApp.use(passport.session());
+        // }
         // Updated session configuration for production
         this.express.use(session({
             secret: process.env.SESSION_SECRET || 'keyboard cat',
