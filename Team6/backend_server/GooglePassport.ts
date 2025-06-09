@@ -29,15 +29,22 @@ class GooglePassport {
         // Dynamic callback URL based on environment
         const getCallbackURL = () => {
             if (process.env.NODE_ENV === 'production') {
-                // For Azure, use the website URL from environment or construct it
                 const azureUrl = process.env.WEBSITE_HOSTNAME 
                     ? `https://${process.env.WEBSITE_HOSTNAME}`
                     : process.env.AZURE_CALLBACK_BASE_URL || 'https://job-fetchr-hee6aedmcmhrgvbu.westus-01.azurewebsites.net';
-                return `${azureUrl}/auth/google/callback`;
+                
+                const callbackUrl = `${azureUrl}/auth/google/callback`;
+                console.log('Production callback URL:', callbackUrl);
+                return callbackUrl;
             } else {
+                console.log('Development callback URL: http://localhost:8080/auth/google/callback');
                 return "http://localhost:8080/auth/google/callback";
             }
         };
+
+        console.log('Environment:', process.env.NODE_ENV);
+        console.log('OAuth Client ID:', this.clientId ? 'Set' : 'Not Set');
+        console.log('OAuth Secret:', this.secretId ? 'Set' : 'Not Set');
 
         passport.use(new GoogleStrategy({
                 clientID: this.clientId,
@@ -46,14 +53,15 @@ class GooglePassport {
             },
             async (accessToken, refreshToken, profile, done) => {
                 console.log("Inside Google strategy");
-                console.log("Callback URL being used:", getCallbackURL());
+                console.log("Profile received:", profile?.displayName);
                 try {
                   const user = await this.userModel.findOrCreateUser(profile);
 
                   if (user) {
-                    console.log("User authenticated:", user);
-                    return done(null, user); // Pass the user object to Passport
+                    console.log("User authenticated successfully:", user.email || user.displayName);
+                    return done(null, user);
                   } else {
+                    console.error("Failed to create or find user");
                     return done(new Error("Failed to create or find user"), null);
                   }
                 } catch (error) {

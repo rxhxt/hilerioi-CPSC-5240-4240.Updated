@@ -52,16 +52,21 @@ class App {
     this.express.use(bodyParser.json());
     this.express.use(bodyParser.urlencoded({ extended: false }));
     
-    // Updated CORS configuration for same-origin setup
+    // Updated CORS configuration for production
     this.express.use((req, res, next) => {
-      // Since frontend and backend are served from same origin, we need different CORS handling
       const allowedOrigins = process.env.NODE_ENV === 'production' 
-        ? [process.env.AZURE_URL || 'https://your-azure-app.azurewebsites.net'] 
-        : ['http://localhost:8080']; // Same port as your backend
+        ? [
+            process.env.WEBSITE_HOSTNAME ? `https://${process.env.WEBSITE_HOSTNAME}` : '',
+            'https://job-fetchr-hee6aedmcmhrgvbu.westus-01.azurewebsites.net',
+            process.env.AZURE_CALLBACK_BASE_URL || ''
+          ].filter(Boolean)
+        : ['http://localhost:8080'];
     
       const origin = req.headers.origin;
-      if (origin && allowedOrigins.includes(origin)) {
-        res.header('Access-Control-Allow-Origin', origin);
+      
+      // For same-origin requests (when frontend is served from same domain), allow without origin check
+      if (!origin || allowedOrigins.includes(origin)) {
+        res.header('Access-Control-Allow-Origin', origin || '*');
       }
       
       res.header('Access-Control-Allow-Credentials', 'true');
@@ -75,16 +80,19 @@ class App {
       }
     });
 
-    // Updated session configuration
+    // Updated session configuration for production
     this.express.use(session({
       secret: process.env.SESSION_SECRET || 'keyboard cat',
       resave: false,
       saveUninitialized: false,
       cookie: {
-        secure: process.env.NODE_ENV === 'production',
+        secure: process.env.NODE_ENV === 'production', // Use HTTPS in production
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+        sameSite: process.env.NODE_ENV === 'production' ? 'lax' : 'lax', // Changed from 'none' to 'lax'
+        domain: process.env.NODE_ENV === 'production' 
+          ? process.env.WEBSITE_HOSTNAME || '.azurewebsites.net'
+          : undefined
       }
     }) as any);
 
