@@ -49,18 +49,17 @@ class AppliedJobModel {
             try {
                 let query;
                 if (userId) {
-                    // Filter by user ID if provided
+                    //filter by user ID (ssoID)
                     query = this.model.find({ user_id: userId });
                 }
                 else {
-                    // Fallback to all jobs (for unprotected routes)
-                    query = this.model.find({});
+                    //if not authenticated, return none
+                    query = this.model.find({ user_id: null });
                 }
                 const appliedJobArray = yield query.exec();
                 response.json(appliedJobArray);
             }
             catch (e) {
-                console.error('Error retrieving applied jobs:', e);
                 response.status(500).json({ error: 'Failed to retrieve applied jobs' });
             }
         });
@@ -71,15 +70,18 @@ class AppliedJobModel {
             try {
                 let query;
                 if (userId) {
-                    // Filter by both job ID and user ID
+                    // find jobs that match both appliedJobId and userId
                     query = this.model.findOne({
                         appliedJobId: appliedJobId,
                         user_id: userId
                     });
                 }
                 else {
-                    // Fallback for unprotected routes
-                    query = this.model.findOne({ appliedJobId: appliedJobId });
+                    // if not authenticated, return none
+                    query = this.model.findOne({
+                        appliedJobId: appliedJobId,
+                        user_id: null
+                    });
                 }
                 const appliedJob = yield query.exec();
                 if (!appliedJob) {
@@ -88,7 +90,6 @@ class AppliedJobModel {
                 response.json(appliedJob);
             }
             catch (e) {
-                console.error('Error retrieving applied job:', e);
                 response.status(500).json({ error: 'Failed to retrieve applied job' });
             }
         });
@@ -98,9 +99,12 @@ class AppliedJobModel {
             console.log('Creating applied job:', JSON.stringify(appliedJob), 'for user:', userId);
             try {
                 appliedJob.appliedJobId = crypto.randomBytes(16).toString('hex');
-                // Set user ID if provided (from authenticated user)
                 if (userId) {
                     appliedJob.user_id = userId;
+                }
+                else {
+                    // If userId is not provided, dont do anything
+                    appliedJob.user_id = null;
                 }
                 // Set applied date if not provided
                 if (!appliedJob.applied_date) {
@@ -111,7 +115,6 @@ class AppliedJobModel {
                 response.json(result);
             }
             catch (e) {
-                console.error('Error creating applied job:', e);
                 response.status(500).json({ error: 'Failed to create applied job' });
             }
         });
