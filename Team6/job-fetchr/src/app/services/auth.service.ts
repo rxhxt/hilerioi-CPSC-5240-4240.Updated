@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, Observable, of, timer } from 'rxjs';
+import { tap, catchError, retry, retryWhen, delayWhen, take } from 'rxjs/operators';
 
 export interface AuthStatus {
   authenticated: boolean;
@@ -19,25 +19,48 @@ export interface AuthStatus {
 export class AuthService {
   private authStatusSubject = new BehaviorSubject<AuthStatus>({ authenticated: false });
   public authStatus$ = this.authStatusSubject.asObservable();
+  private baseUrl: string | undefined;
 
   constructor(private http: HttpClient) {
+    // Use environment-specific base URL
+    this.baseUrl = "https://job-fetchr-hee6aedmcmhrgvbu.westus-01.azurewebsites.net"
+    console.log('Auth service initialized with base URL:', this.baseUrl);
     this.checkAuthStatus().subscribe();
   }
 
   checkAuthStatus(): Observable<AuthStatus> {
-    return this.http.get<AuthStatus>('/api/v1/auth/status', { 
+    const url = `${this.baseUrl}/api/v1/auth/status`;
+    
+    return this.http.get<AuthStatus>(url, { 
       withCredentials: true,
       headers: {
-        'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache'
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
       }
     }).pipe(
+      retryWhen(errors =>
+        errors.pipe(
+          tap(error => console.log('Auth check failed, retrying...', error)),
+          delayWhen(() => timer(1000)),
+          take(3)
+        )
+      ),
       tap(status => {
         console.log('Auth status received:', status);
         this.authStatusSubject.next(status);
       }),
-      catchError(error => {
-        console.error('Auth status check failed:', error);
+      catchError((error: HttpErrorResponse) => {
+        console.error('Auth status check failed after retries:', error);
+        
+        // Handle different error types
+        if (error.status === 0) {
+          console.error('Network error - unable to connect to server');
+        } else if (error.status === 401) {
+          console.log('User not authenticated');
+        } else if (error.status >= 500) {
+          console.error('Server error during auth check');
+        }
+        
         this.authStatusSubject.next({ authenticated: false });
         return of({ authenticated: false });
       })
@@ -45,29 +68,51 @@ export class AuthService {
   }
 
   login(): void {
-    // Since we're on the same origin, use relative URL
-    window.location.href = '/login';
+    // Use full URL for login to handle cross-origin scenarios
+    const loginUrl = `${this.baseUrl}/login`;
+    console.log('Redirecting to login:', loginUrl);
+    window.location.href = loginUrl;
   }
 
   logout(): Observable<any> {
-    return this.http.post('/api/v1/auth/logout', {}, { 
+    const url = `${this.baseUrl}/api/v1/auth/logout`;
+    
+    return this.http.post(url, {}, { 
       withCredentials: true,
       headers: {
+        'Accept': 'application/json',
         'Content-Type': 'application/json'
       }
     }).pipe(
       tap(() => {
+        console.log('Logout successful');
         this.authStatusSubject.next({ authenticated: false });
       }),
-      catchError(error => {
+      catchError((error: HttpErrorResponse) => {
         console.error('Logout failed:', error);
+        // Even if logout fails on server, clear local auth state
         this.authStatusSubject.next({ authenticated: false });
-        return of({ success: false });
+        return of({ success: false, error: error.message });
       })
     );
   }
 
   getCurrentAuthStatus(): AuthStatus {
     return this.authStatusSubject.value;
+  }
+
+  // Method to refresh auth status manually
+  refreshAuthStatus(): Observable<AuthStatus> {
+    return this.checkAuthStatus();
+  }
+
+  // Check if user is authenticated (synchronous)
+  isAuthenticated(): boolean {
+    return this.authStatusSubject.value.authenticated;
+  }
+
+  // Get current user info
+  getCurrentUser(): any {
+    return this.authStatusSubject.value.user;
   }
 }
