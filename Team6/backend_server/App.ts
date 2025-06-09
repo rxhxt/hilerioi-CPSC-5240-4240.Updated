@@ -208,12 +208,6 @@ class App {
     this.express.use('/images', express.static(__dirname + '/img'));
     this.express.use('/', express.static(__dirname + '/dist/job-fetchr/browser'));
 
-    
-    // Catch-all handler for Angular app - MUST BE LAST
-    // this.express.get('*', (req, res) => {
-    //   console.log('Serving Angular app for path:', req.path);
-    //   res.sendFile(__dirname + '/dist/job-fetchr/browser');
-    // });
   }
 }
 
